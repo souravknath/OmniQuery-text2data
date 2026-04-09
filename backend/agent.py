@@ -5,7 +5,7 @@ import os
 import sys
 from typing import TypedDict, Annotated, List
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import StateGraph, END, START
 from langgraph.prebuilt import ToolNode
@@ -15,7 +15,7 @@ from mcp.client.stdio import stdio_client
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_groq import ChatGroq
 
-load_dotenv()
+load_dotenv(override=True)
 
 # --- 1. Define State & Graph Nodes ---
 class AgentState(TypedDict):
@@ -57,6 +57,15 @@ async def run_agent(user_input: str):
                     llm = ChatGroq(
                         api_key=os.getenv("GROQ_API_KEY"),
                         model=model_name,
+                        temperature=0,
+                        streaming=True
+                    ).bind_tools(tools)
+                elif provider == "azure":
+                    llm = AzureChatOpenAI(
+                        api_key=os.getenv("AZURE_OPENAI_API_KEY", os.getenv("OPENROUTER_API_KEY")),
+                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT", os.getenv("OPENROUTER_BASE_URL")),
+                        azure_deployment=model_name,
+                        api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-15-preview"),
                         temperature=0,
                         streaming=True
                     ).bind_tools(tools)

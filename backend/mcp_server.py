@@ -39,18 +39,21 @@ def execute_nosql(db_name: str, collection_name: str, query_type: str, query_pay
         collection = db[collection_name]
         
         if query_type == "find":
-            cursor = collection.find(payload, {'_id': 0})
+            cursor = collection.find(payload, {'_id': 0}).limit(50)
             results = list(cursor)
         elif query_type == "aggregate":
             cursor = collection.aggregate(payload)
-            results = [{k: v for k, v in doc.items() if k != '_id'} for doc in list(cursor)]
+            results = [{k: v for k, v in doc.items() if k != '_id'} for doc in list(cursor)][:50]
         else:
             return "Error: query_type must be 'find' or 'aggregate'"
             
         if not results:
             return "No records found in CustomerDB."
             
-        return json.dumps(results, default=str)
+        json_output = json.dumps(results, default=str)
+        if len(results) == 50:
+            return json_output + "\n\n(Warning: Results limited to 50 records to prevent memory crash. Use precise filters or aggregates for full data analysis)."
+        return json_output
     except json.JSONDecodeError:
         return "Error: query_payload must be valid JSON."
     except Exception as e:
