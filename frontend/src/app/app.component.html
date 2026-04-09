@@ -1,0 +1,51 @@
+<div class="app-container">
+  <header>
+    <div class="logo">
+      <span class="icon">🧠</span>
+      <h1>Talk2Data <span>AI</span></h1>
+    </div>
+    <div class="status" [class.online]="!isLoading">
+      {{ isLoading ? (currentStatus || 'Agent is thinking...') : 'Agent is Online' }}
+    </div>
+  </header>
+
+  <main class="chat-container">
+    <div class="chat-messages">
+      <div *ngFor="let msg of messages; let last = last" class="message-wrapper" [class.user]="msg.sender === 'user'">
+        <!-- Show bubble if it has text OR if it's the last agent message being streamed -->
+        <div class="message-bubble" *ngIf="msg.text || (last && msg.sender === 'agent' && isLoading)">
+
+          <div class="message-content">{{ msg.text }}</div>
+          <div class="message-meta">{{ msg.timestamp | date:'shortTime' }}</div>
+        </div>
+      </div>
+      <div *ngIf="isLoading && !currentStatus" class="message-wrapper">
+        <div class="message-bubble loading">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="input-area">
+      <div class="input-wrapper">
+        <input 
+          type="text" 
+          [(ngModel)]="userMessage" 
+          (keyup.enter)="sendMessage()" 
+          placeholder="Ask about HR or Sales data..."
+          [disabled]="isLoading"
+        >
+        <button (click)="sendMessage()" [disabled]="isLoading || !userMessage.trim()">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </main>
+</div>
