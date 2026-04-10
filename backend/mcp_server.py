@@ -1,7 +1,5 @@
 import warnings
 warnings.filterwarnings("ignore")
-
-import asyncio
 import json
 import os
 import pyodbc
@@ -12,7 +10,7 @@ from mcp.server.fastmcp import FastMCP
 load_dotenv()
 
 # Initialize the MCP Server
-mcp = FastMCP("Talk2Data Customer Registry")
+mcp = FastMCP("OmniQuery Customer Registry")
 
 # NoSQL Layer (CustomerDB only)
 mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")

@@ -1,6 +1,6 @@
-# OmniQuery-text2data
+# OmniQuery-OmniQuery
 
-OmniQuery-text2data is a sophisticated multi-database AI chat application that enables users to query diverse data sources (HR, Sales, Marketing, Inventory) using natural language. It leverages a modern stack combining FastAPI, Angular, LangGraph, and the Model Context Protocol (MCP) to provide a seamless, real-time data exploration experience.
+OmniQuery-OmniQuery is a sophisticated multi-database AI chat application that enables users to query diverse data sources (HR, Sales, Marketing, Inventory) using natural language. It leverages a modern stack combining FastAPI, Angular, LangGraph, and the Model Context Protocol (MCP) to provide a seamless, real-time data exploration experience.
 
 ---
 
