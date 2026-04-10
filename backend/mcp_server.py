@@ -113,6 +113,41 @@ def query_users_orders_db(sql_query: str) -> str:
 
 
 
+@mcp.tool()
+def query_locations_db(sql_query: str) -> str:
+    """
+    Executes a Microsoft SQL Server (T-SQL) query on the Locations Database.
+    Use this for any address, city, state, or country-related lookups.
+    
+    Tables available:
+    1. Locations (LocationId int, Address nvarchar, City nvarchar, State nvarchar, Country nvarchar, ZipCode nvarchar)
+    
+    IMPORTANT: Provide the 'sql_query' as a valid T-SQL SELECT statement. 
+    Use 'TOP 50' in your queries to avoid returning too much data.
+    """
+    query_lower = sql_query.lower()
+    if any(blocked in query_lower for blocked in ["insert ", "update ", "delete ", "drop ", "truncate ", "alter "]):
+        return "Error: Only read-only SELECT queries are allowed."
+        
+    conn_str = os.getenv("SALES_DB_CONN", "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=Location;Trusted_Connection=yes;")
+    try:
+        conn = pyodbc.connect(conn_str, timeout=5)
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        
+        if not cursor.description:
+            return "Query executed successfully, but returned no data."
+            
+        columns = [column[0] for column in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        
+        json_output = json.dumps(results, default=str)
+        if len(results) > 50:
+            return json.dumps(results[:50], default=str) + "\n\n(Warning: Results limited to 50 records to prevent memory crash. Use precise WHERE clauses or aggregations)."
+        return json_output
+    except Exception as e:
+        return f"SQL Error: {str(e)}"
+
 if __name__ == "__main__":
     mcp.run()
 
