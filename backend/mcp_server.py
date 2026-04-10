@@ -65,11 +65,16 @@ def query_customer_db(collection_name: str, query_payload: str, query_type: str 
     """
     Use for customer profiles, activities, and support tickets (MongoDB CustomerDB).
     Collections: 
-    - customers: profile (name, age, gender), location (city, state, country), segments (list), financial (total_spent, avg_order_value), is_active
+    - customers: profile (name, age, gender), location_id (INT - links to SQL Locations database), segments (list), financial (total_spent, avg_order_value), is_active
     - activities: customer_id, activity_type, product_category, amount, timestamp
     - support_tickets: customer_id, issue_type, status, priority
+    
+    RELATIONSHIP: 
+    - customers.location_id maps to Location.dbo.Locations.LocationId in the SQL Server database.
+    - To find a customer's physical address, fetch the customer from Mongo first, then query the SQL database using their location_id.
+    
     IMPORTANT: Provide the 'query_payload' as a valid JSON string. Use query_type 'find' or 'aggregate'.
-    Example: {"location.country": "USA"}
+    Example: {"location_id": 5}
     """
     return execute_nosql("CustomerDB", collection_name, query_type.lower(), query_payload)
 
@@ -80,9 +85,19 @@ def query_users_orders_db(sql_query: str) -> str:
     Use this for any user or order-related questions.
     
     Tables available:
-    1. Users (UserId uniqueidentifier, FirstName nvarchar, LastName nvarchar, EmailId nvarchar, UserName nvarchar)
-    2. Orders (OrderId uniqueidentifier, OrderName nvarchar, Amount numeric, OrderDate smalldatetime)
-    3. User_Orders (Id smallint, UserId uniqueidentifier, OrderId uniqueidentifier)
+    1. Users.dbo.Users (UserId, FirstName, LastName, EmailId, UserName, LocationId)
+    2. Users.dbo.Orders (OrderId, OrderName, Amount, OrderDate)
+    3. Users.dbo.User_Orders (Id, UserId, OrderId)
+    
+    CROSS-DATABASE RELATIONSHIP: 
+    - To get State, City, or Address for a User, you MUST join with the Location database.
+    - JOIN CLUES: Users.dbo.Users.LocationId = Location.dbo.Locations.LocationId
+    
+    MANDATORY SYNTAX FOR LOCATION QUERIES:
+    SELECT u.FirstName, l.State, l.City 
+    FROM Users.dbo.Users u 
+    JOIN Location.dbo.Locations l ON u.LocationId = l.LocationId 
+    WHERE l.State = 'StateName'
     
     IMPORTANT: Provide the 'sql_query' as a valid T-SQL SELECT statement. 
     Use 'TOP 50' in your queries to avoid returning too much data.
