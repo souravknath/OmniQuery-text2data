@@ -40,7 +40,7 @@ def create_customer():
     }
 
 # Insert Customers
-customer_list = [create_customer() for _ in range(50000)]
+customer_list = [create_customer() for _ in range(1000)]
 customers.insert_many(customer_list)
 
 # Activities
@@ -69,7 +69,7 @@ if activity_list:
 # Support Tickets
 print("Creating support tickets...")
 ticket_list = []
-for c in customer_list[:15000]:
+for c in customer_list[:300]:
     ticket_list.append({
         "ticket_id": str(uuid.uuid4()),
         "customer_id": c["customer_id"],

@@ -4,6 +4,7 @@ warnings.filterwarnings("ignore")
 import asyncio
 import json
 import os
+import pyodbc
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from mcp.server.fastmcp import FastMCP
@@ -71,6 +72,43 @@ def query_customer_db(collection_name: str, query_payload: str, query_type: str 
     Example: {"location.country": "USA"}
     """
     return execute_nosql("CustomerDB", collection_name, query_type.lower(), query_payload)
+
+@mcp.tool()
+def query_users_orders_db(sql_query: str) -> str:
+    """
+    Executes a Microsoft SQL Server (T-SQL) query on the Users and Orders Database.
+    Use this for any user or order-related questions.
+    
+    Tables available:
+    1. Users (UserId uniqueidentifier, FirstName nvarchar, LastName nvarchar, EmailId nvarchar, UserName nvarchar)
+    2. Orders (OrderId uniqueidentifier, OrderName nvarchar, Amount numeric, OrderDate smalldatetime)
+    3. User_Orders (Id smallint, UserId uniqueidentifier, OrderId uniqueidentifier)
+    
+    IMPORTANT: Provide the 'sql_query' as a valid T-SQL SELECT statement. 
+    Use 'TOP 50' in your queries to avoid returning too much data.
+    """
+    query_lower = sql_query.lower()
+    if any(blocked in query_lower for blocked in ["insert ", "update ", "delete ", "drop ", "truncate ", "alter "]):
+        return "Error: Only read-only SELECT queries are allowed."
+        
+    conn_str = os.getenv("HR_DB_CONN", "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=Users;Trusted_Connection=yes;")
+    try:
+        conn = pyodbc.connect(conn_str, timeout=5)
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        
+        if not cursor.description:
+            return "Query executed successfully, but returned no data."
+            
+        columns = [column[0] for column in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        
+        json_output = json.dumps(results, default=str)
+        if len(results) > 50:
+            return json.dumps(results[:50], default=str) + "\n\n(Warning: Results limited to 50 records to prevent memory crash. Use precise WHERE clauses or aggregations)."
+        return json_output
+    except Exception as e:
+        return f"SQL Error: {str(e)}"
 
 
 

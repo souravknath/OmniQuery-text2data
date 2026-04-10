@@ -10,3 +10,4 @@ faker
 mcp[cli]
 langchain-groq
 langchain-mcp-adapters
+pyodbc
