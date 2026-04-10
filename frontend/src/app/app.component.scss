@@ -122,7 +122,41 @@ header {
   .message-content {
     font-size: 0.9375rem;
     line-height: 1.5;
-    white-space: pre-wrap;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+
+      th, td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+      }
+
+      th {
+        background: rgba(56, 189, 248, 0.1);
+        color: #38bdf8;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+      }
+
+      tr:hover {
+        background: rgba(148, 163, 184, 0.05);
+      }
+    }
+
+    p {
+      margin: 0.5rem 0;
+      &:first-child { margin-top: 0; }
+      &:last-child { margin-bottom: 0; }
+    }
   }
 }
 

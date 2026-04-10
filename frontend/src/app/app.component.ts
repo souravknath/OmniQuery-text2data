@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ChatService } from './chat.service';
+import { marked } from 'marked';
 
 interface Message {
   text: string;
@@ -29,7 +31,12 @@ export class AppComponent {
   isLoading = false;
   currentStatus = '';
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService, private sanitizer: DomSanitizer) { }
+
+  renderMarkdown(text: string): SafeHtml {
+    const html = marked.parse(text) as string;
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
 
   async sendMessage() {
     if (!this.userMessage.trim() || this.isLoading) return;

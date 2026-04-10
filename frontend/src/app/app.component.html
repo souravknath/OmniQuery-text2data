@@ -15,7 +15,7 @@
         <!-- Show bubble if it has text OR if it's the last agent message being streamed -->
         <div class="message-bubble" *ngIf="msg.text || (last && msg.sender === 'agent' && isLoading)">
 
-          <div class="message-content">{{ msg.text }}</div>
+          <div class="message-content" [innerHTML]="renderMarkdown(msg.text)"></div>
           <div class="message-meta">{{ msg.timestamp | date:'shortTime' }}</div>
         </div>
       </div>

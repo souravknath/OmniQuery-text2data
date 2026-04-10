@@ -35,6 +35,7 @@ The application follows a modular architecture designed for scalability and secu
 - **Python 3.10+**
 - **Node.js (LTS)** & **npm**
 - **MongoDB** (Running locally or accessible via URI)
+- **SQL Server** (Running locally or accessible via URI)
 
 ### Backend Setup
 

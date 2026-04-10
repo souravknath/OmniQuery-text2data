@@ -6,7 +6,7 @@ import sys
 from typing import TypedDict, Annotated, List
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
-from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, END, START
 from langgraph.prebuilt import ToolNode
 from langgraph.graph.message import add_messages
@@ -101,7 +101,17 @@ async def run_agent(user_input: str):
                 app = workflow.compile()
                 
                 # Execute graph with streaming events
-                inputs = {"messages": [HumanMessage(content=user_input)]}
+                system_prompt = (
+                    "You are a helpful data assistant. When providing lists of records from the database "
+                    "(Users, Orders, Customers, or Locations), you MUST present the result in a clean "
+                    "Markdown TABLE format. Only use plain text if a table is not appropriate (e.g., answering a single fact)."
+                )
+                inputs = {
+                    "messages": [
+                        SystemMessage(content=system_prompt),
+                        HumanMessage(content=user_input)
+                    ]
+                }
                 
                 async for event in app.astream_events(inputs, version="v2"):
                     kind = event["event"]
