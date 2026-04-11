@@ -7,6 +7,13 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from mcp.server.fastmcp import FastMCP
 
+# Import Schema Metadata
+from database_schema import (
+    MONGODB_CUSTOMER_DB_SCHEMA, MONGODB_CUSTOMER_DB_SAMPLES,
+    SQL_USERS_ORDERS_DB_SCHEMA, SQL_USERS_ORDERS_DB_SAMPLES,
+    SQL_LOCATIONS_DB_SCHEMA, SQL_LOCATIONS_DB_SAMPLES
+)
+
 load_dotenv()
 
 # Initialize the MCP Server
@@ -58,48 +65,31 @@ def execute_nosql(db_name: str, collection_name: str, query_type: str, query_pay
     except Exception as e:
         return f"Error executing NoSQL query: {str(e)}"
 
+
 @mcp.tool()
 def query_customer_db(collection_name: str, query_payload: str, query_type: str = "find") -> str:
-    """
-    Use for customer profiles, activities, and support tickets (MongoDB CustomerDB).
-    Collections: 
-    - customers: profile (name, age, gender), location_id (INT - links to SQL Locations database), segments (list), financial (total_spent, avg_order_value), is_active
-    - activities: customer_id, activity_type, product_category, amount, timestamp
-    - support_tickets: customer_id, issue_type, status, priority
-    
-    RELATIONSHIP: 
-    - customers.location_id maps to Location.dbo.Locations.LocationId in the SQL Server database.
-    - To find a customer's physical address, fetch the customer from Mongo first, then query the SQL database using their location_id.
-    
-    IMPORTANT: Provide the 'query_payload' as a valid JSON string. Use query_type 'find' or 'aggregate'.
-    Example: {"location_id": 5}
-    """
     return execute_nosql("CustomerDB", collection_name, query_type.lower(), query_payload)
+
+# Dynamically set tool description from schema
+query_customer_db.__doc__ = f"""
+Query the MongoDB CustomerDB for profiles, activities, and support tickets.
+
+SCHEMA:
+- customers: {MONGODB_CUSTOMER_DB_SCHEMA['customers']}
+- activities: {MONGODB_CUSTOMER_DB_SCHEMA['activities']}
+- support_tickets: {MONGODB_CUSTOMER_DB_SCHEMA['support_tickets']}
+
+SAMPLES:
+{json.dumps(MONGODB_CUSTOMER_DB_SAMPLES, indent=2)}
+
+RELATIONSHIP: 
+- customers.location_id -> SQL Location.dbo.Locations.LocationId
+
+IMPORTANT: Use query_type 'find' or 'aggregate'. Provide 'query_payload' as a valid JSON string.
+"""
 
 @mcp.tool()
 def query_users_orders_db(sql_query: str) -> str:
-    """
-    Executes a Microsoft SQL Server (T-SQL) query on the Users and Orders Database.
-    Use this for any user or order-related questions.
-    
-    Tables available:
-    1. Users.dbo.Users (UserId, FirstName, LastName, EmailId, UserName, LocationId)
-    2. Users.dbo.Orders (OrderId, OrderName, Amount, OrderDate)
-    3. Users.dbo.User_Orders (Id, UserId, OrderId)
-    
-    CROSS-DATABASE RELATIONSHIP: 
-    - To get State, City, or Address for a User, you MUST join with the Location database.
-    - JOIN CLUES: Users.dbo.Users.LocationId = Location.dbo.Locations.LocationId
-    
-    MANDATORY SYNTAX FOR LOCATION QUERIES:
-    SELECT u.FirstName, l.State, l.City 
-    FROM Users.dbo.Users u 
-    JOIN Location.dbo.Locations l ON u.LocationId = l.LocationId 
-    WHERE l.State = 'StateName'
-    
-    IMPORTANT: Provide the 'sql_query' as a valid T-SQL SELECT statement. 
-    Use 'TOP 50' in your queries to avoid returning too much data.
-    """
     query_lower = sql_query.lower()
     if any(blocked in query_lower for blocked in ["insert ", "update ", "delete ", "drop ", "truncate ", "alter "]):
         return "Error: Only read-only SELECT queries are allowed."
@@ -123,21 +113,26 @@ def query_users_orders_db(sql_query: str) -> str:
     except Exception as e:
         return f"SQL Error: {str(e)}"
 
+# Dynamically set tool description from schema
+query_users_orders_db.__doc__ = f"""
+Executes a Microsoft SQL Server (T-SQL) query on Users and Orders Database.
 
+SCHEMA:
+- Users: {SQL_USERS_ORDERS_DB_SCHEMA['Users']}
+- Orders: {SQL_USERS_ORDERS_DB_SCHEMA['Orders']}
+- User_Orders: {SQL_USERS_ORDERS_DB_SCHEMA['User_Orders']}
 
+SAMPLES:
+{json.dumps(SQL_USERS_ORDERS_DB_SAMPLES, indent=2)}
+
+CROSS-DATABASE JOIN:
+Users.dbo.Users.LocationId = Location.dbo.Locations.LocationId
+
+IMPORTANT: Use 'TOP 50' in your SELECT statements to avoid returning too much data.
+"""
 
 @mcp.tool()
 def query_locations_db(sql_query: str) -> str:
-    """
-    Executes a Microsoft SQL Server (T-SQL) query on the Locations Database.
-    Use this for any address, city, state, or country-related lookups.
-    
-    Tables available:
-    1. Locations (LocationId int, Address nvarchar, City nvarchar, State nvarchar, Country nvarchar, ZipCode nvarchar)
-    
-    IMPORTANT: Provide the 'sql_query' as a valid T-SQL SELECT statement. 
-    Use 'TOP 50' in your queries to avoid returning too much data.
-    """
     query_lower = sql_query.lower()
     if any(blocked in query_lower for blocked in ["insert ", "update ", "delete ", "drop ", "truncate ", "alter "]):
         return "Error: Only read-only SELECT queries are allowed."
@@ -160,6 +155,19 @@ def query_locations_db(sql_query: str) -> str:
         return json_output
     except Exception as e:
         return f"SQL Error: {str(e)}"
+
+# Dynamically set tool description from schema
+query_locations_db.__doc__ = f"""
+Executes a Microsoft SQL Server (T-SQL) query on the Locations Database.
+
+SCHEMA:
+- Locations: {SQL_LOCATIONS_DB_SCHEMA['Locations']}
+
+SAMPLES:
+{json.dumps(SQL_LOCATIONS_DB_SAMPLES, indent=2)}
+
+IMPORTANT: Use 'TOP 50' in your SELECT statements to avoid returning too much data.
+"""
 
 if __name__ == "__main__":
     mcp.run()
