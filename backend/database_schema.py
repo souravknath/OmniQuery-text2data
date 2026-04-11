@@ -1,103 +1,114 @@
 
-# MongoDB CustomerDB Metadata
-MONGODB_CUSTOMER_DB_SCHEMA = {
-    "customers": {
-        "description": "User profile information, segments, and financial metrics.",
+import json
+
+# MongoDB HealthcareDB Metadata (NoSQL)
+MONGODB_HEALTHCARE_DB_SCHEMA = {
+    "patients": {
+        "description": "Patient profiles and clinical status.",
         "fields": {
-            "customer_id": "Unique UUID for the customer",
+            "patient_id": "Unique UUID for the patient",
             "profile": {
                 "name": "Full name",
                 "age": "Age in years",
                 "gender": "Male or Female"
             },
-            "location_id": "INT - links to SQL Locations.dbo.Locations.LocationId",
-            "segments": "LIST - labels like 'Premium', 'New', 'Frequent Buyer', 'Churn Risk'",
-            "financial": {
-                "total_spent": "Total amount spent by customer",
-                "avg_order_value": "Average value per order"
+            "clinical": {
+                "blood_type": "A+, O-, etc.",
+                "allergies": "LIST of allergy strings",
+                "chronic_conditions": "LIST of existing conditions"
             },
-            "is_active": "Boolean status of account"
+            "facility_id": "INT - links to SQL Facilities.dbo.Facilities.FacilityId",
+            "is_active": "Boolean status of patient"
         }
     },
-    "activities": {
-        "description": "Log of customer interactions and purchases.",
+    "encounters": {
+        "description": "Record of doctor-patient interactions and visits.",
         "fields": {
-            "activity_id": "Unique UUID",
-            "customer_id": "Reference to customers.customer_id",
-            "activity_type": "View, Cart, or Purchase",
-            "product_category": "Electronics, Fashion, or Grocery",
-            "amount": "Transaction amount (if purchase)",
-            "timestamp": "ISO Date of activity"
-        }
-    },
-    "support_tickets": {
-        "description": "Customer support interaction history.",
-        "fields": {
-            "ticket_id": "Unique UUID",
-            "customer_id": "Reference to customers.customer_id",
-            "issue_type": "Payment, Delivery, or Refund",
-            "status": "Open or Closed",
-            "priority": "Low, Medium, or High",
-            "created_at": "ISO Date"
+            "encounter_id": "Unique UUID",
+            "patient_id": "Reference to patients.patient_id",
+            "reason": "Primary complaint or reason for visit",
+            "diagnosis": "Clinical diagnosis codes or text",
+            "medications": "LIST of prescribed drugs",
+            "timestamp": "ISO Date of encounter"
         }
     }
 }
 
-MONGODB_CUSTOMER_DB_SAMPLES = {
-    "customers": [
+MONGODB_HEALTHCARE_DB_SAMPLES = {
+    "patients": [
         {
-            "customer_id": "550e8400-e29b-41d4-a716-446655440000",
-            "profile": {"name": "Arjun Sharma", "age": 28, "gender": "Male"},
-            "location_id": 5,
-            "segments": ["Premium", "Frequent Buyer"],
-            "financial": {"total_spent": 15400, "avg_order_value": 2200},
+            "patient_id": "p123-abc-456",
+            "profile": {"name": "Suresh Raina", "age": 45, "gender": "Male"},
+            "clinical": {
+                "blood_type": "B+", 
+                "allergies": ["Peanuts", "Penicillin"],
+                "chronic_conditions": ["Hypertension"]
+            },
+            "facility_id": 1,
             "is_active": True
         }
     ],
-    "activities": [
+    "encounters": [
         {
-            "customer_id": "550e8400-e29b-41d4-a716-446655440000",
-            "activity_type": "Purchase",
-            "product_category": "Electronics",
-            "amount": 12000,
-            "timestamp": "2024-03-20T14:30:00Z"
+            "patient_id": "p123-abc-456",
+            "reason": "Annual Checkup",
+            "diagnosis": "Healthy",
+            "medications": ["Vitamin D3"],
+            "timestamp": "2024-05-10T09:00:00Z"
         }
     ]
 }
 
-# SQL Server Users & Orders Metadata
-SQL_USERS_ORDERS_DB_SCHEMA = {
-    "Users": {
-        "columns": ["UserId (UUID)", "FirstName (NVARCHAR)", "LastName (NVARCHAR)", "EmailId (NVARCHAR)", "UserName (NVARCHAR)", "LocationId (INT)"],
-        "relationships": "LocationId links to Location.dbo.Locations.LocationId"
+# SQL Server Hospital Metadata
+SQL_HOSPITAL_DB_SCHEMA = {
+    "Doctors": {
+        "columns": ["DoctorId (UUID)", "FirstName (NVARCHAR)", "LastName (NVARCHAR)", "Specialization (NVARCHAR)", "EmailId (NVARCHAR)", "FacilityId (INT)"],
+        "relationships": "FacilityId links to FacilityDB.dbo.Facilities.FacilityId"
     },
-    "Orders": {
-        "columns": ["OrderId (UUID)", "OrderName (NVARCHAR)", "Amount (DECIMAL)", "OrderDate (DATETIME)"]
-    },
-    "User_Orders": {
-        "columns": ["Id (INT)", "UserId (UUID)", "OrderId (UUID)"],
-        "relationships": "Joins Users and Orders tables"
+    "Appointments": {
+        "columns": ["AppointmentId (UUID)", "DoctorId (UUID)", "PatientId (UUID or STRING)", "AppointmentDate (DATETIME)", "Status (NVARCHAR)"]
     }
 }
 
-SQL_USERS_ORDERS_DB_SAMPLES = {
-    "Users": [
-        {"UserId": "A1B2C3D4...", "FirstName": "Sita", "LastName": "Rao", "EmailId": "sita.rao@example.com", "UserName": "sita.rao_88", "LocationId": 12}
+SQL_HOSPITAL_DB_SAMPLES = {
+    "Doctors": [
+        {"DoctorId": "d1-uuid", "FirstName": "Anita", "LastName": "Desai", "Specialization": "Cardiology", "EmailId": "dr.anita@hospital.com", "FacilityId": 1}
     ],
-    "Orders": [
-        {"OrderId": "B2C3D4E5...", "OrderName": "Laptop - Zenbook", "Amount": 85000.50, "OrderDate": "2024-04-01 10:15:00"}
+    "Appointments": [
+        {"AppointmentId": "a1-uuid", "DoctorId": "d1-uuid", "PatientId": "p123-abc-456", "AppointmentDate": "2024-06-15 11:30:00", "Status": "Scheduled"}
     ]
 }
 
-# SQL Server Locations Metadata
-SQL_LOCATIONS_DB_SCHEMA = {
-    "Locations": {
-        "columns": ["LocationId (INT)", "Address (NVARCHAR)", "City (NVARCHAR)", "State (NVARCHAR)", "Country (NVARCHAR)", "ZipCode (NVARCHAR)"]
+# SQL Server Facilities Metadata
+SQL_FACILITIES_DB_SCHEMA = {
+    "Facilities": {
+        "columns": ["FacilityId (INT)", "Name (NVARCHAR)", "Address (NVARCHAR)", "City (NVARCHAR)", "State (NVARCHAR)", "Country (NVARCHAR)", "ZipCode (NVARCHAR)"]
     }
 }
 
-SQL_LOCATIONS_DB_SAMPLES = {
-    "Locations": [
-        {"LocationId": 5, "Address": "123 MG Road", "City": "Bangalore", "State": "Karnataka", "Country": "India", "ZipCode": "560001"}
+SQL_FACILITIES_DB_SAMPLES = {
+    "Facilities": [
+        {"FacilityId": 1, "Name": "Appolo Hospital", "Address": "45 Bannerghatta Rd", "City": "Bangalore", "State": "Karnataka", "Country": "India", "ZipCode": "560076"}
+    ]
+}
+
+# PostgreSQL Pharmacy Metadata
+POSTGRES_PHARMACY_DB_SCHEMA = {
+    "Medicines": {
+        "columns": ["medicine_id (SERIAL)", "name (VARCHAR)", "manufacturer (VARCHAR)", "price (DECIMAL)", "inventory_count (INT)", "category (VARCHAR)"],
+        "description": "Stock of medicines available in the pharmacy inventory."
+    },
+    "Prescriptions": {
+        "columns": ["prescription_id (UUID)", "patient_id (UUID/STRING)", "doctor_id (UUID)", "medicine_id (INT)", "dosage (VARCHAR)", "issued_date (DATE)"],
+        "relationships": "Links Patients (Mongo), Doctors (SQL), and Medicines (PG)."
+    }
+}
+
+POSTGRES_PHARMACY_DB_SAMPLES = {
+    "Medicines": [
+        {"medicine_id": 101, "name": "Amoxicillin", "manufacturer": "Pfizer", "price": 450.00, "inventory_count": 1500, "category": "Antibiotic"}
+    ],
+    "Prescriptions": [
+        {"prescription_id": "pr-uuid", "patient_id": "p123-abc-456", "doctor_id": "d1-uuid", "medicine_id": 101, "dosage": "500mg twice daily", "issued_date": "2024-05-12"}
     ]
 }

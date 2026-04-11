@@ -10,3 +10,5 @@ faker
 mcp[cli]
 langchain-groq
 pyodbc
+langchain-mcp-adapters
+psycopg2-binary

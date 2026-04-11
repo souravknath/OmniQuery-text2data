@@ -3,23 +3,26 @@ warnings.filterwarnings("ignore")
 import json
 import os
 import pyodbc
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from mcp.server.fastmcp import FastMCP
 
 # Import Schema Metadata
 from database_schema import (
-    MONGODB_CUSTOMER_DB_SCHEMA, MONGODB_CUSTOMER_DB_SAMPLES,
-    SQL_USERS_ORDERS_DB_SCHEMA, SQL_USERS_ORDERS_DB_SAMPLES,
-    SQL_LOCATIONS_DB_SCHEMA, SQL_LOCATIONS_DB_SAMPLES
+    MONGODB_HEALTHCARE_DB_SCHEMA, MONGODB_HEALTHCARE_DB_SAMPLES,
+    SQL_HOSPITAL_DB_SCHEMA, SQL_HOSPITAL_DB_SAMPLES,
+    SQL_FACILITIES_DB_SCHEMA, SQL_FACILITIES_DB_SAMPLES,
+    POSTGRES_PHARMACY_DB_SCHEMA, POSTGRES_PHARMACY_DB_SAMPLES
 )
 
 load_dotenv()
 
 # Initialize the MCP Server
-mcp = FastMCP("OmniQuery Customer Registry")
+mcp = FastMCP("OmniQuery Healthcare Registry")
 
-# NoSQL Layer (CustomerDB only)
+# NoSQL Layer (HealthcareDB only)
 mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
 _mongo_client = MongoClient(mongo_uri)
 
@@ -54,7 +57,7 @@ def execute_nosql(db_name: str, collection_name: str, query_type: str, query_pay
             return "Error: query_type must be 'find' or 'aggregate'"
             
         if not results:
-            return "No records found in CustomerDB."
+            return f"No records found in {db_name}."
             
         json_output = json.dumps(results, default=str)
         if len(results) == 50:
@@ -65,36 +68,35 @@ def execute_nosql(db_name: str, collection_name: str, query_type: str, query_pay
     except Exception as e:
         return f"Error executing NoSQL query: {str(e)}"
 
-
 @mcp.tool()
-def query_customer_db(collection_name: str, query_payload: str, query_type: str = "find") -> str:
-    return execute_nosql("CustomerDB", collection_name, query_type.lower(), query_payload)
+def query_healthcare_db(collection_name: str, query_payload: str, query_type: str = "find") -> str:
+    return execute_nosql("HealthcareDB", collection_name, query_type.lower(), query_payload)
 
 # Dynamically set tool description from schema
-query_customer_db.__doc__ = f"""
-Query the MongoDB CustomerDB for profiles, activities, and support tickets.
+query_healthcare_db.__doc__ = f"""
+Query the MongoDB HealthcareDB for patient profiles and medical encounters.
 
 SCHEMA:
-- customers: {MONGODB_CUSTOMER_DB_SCHEMA['customers']}
-- activities: {MONGODB_CUSTOMER_DB_SCHEMA['activities']}
-- support_tickets: {MONGODB_CUSTOMER_DB_SCHEMA['support_tickets']}
+- patients: {MONGODB_HEALTHCARE_DB_SCHEMA['patients']}
+- encounters: {MONGODB_HEALTHCARE_DB_SCHEMA['encounters']}
 
 SAMPLES:
-{json.dumps(MONGODB_CUSTOMER_DB_SAMPLES, indent=2)}
+{json.dumps(MONGODB_HEALTHCARE_DB_SAMPLES, indent=2)}
 
 RELATIONSHIP: 
-- customers.location_id -> SQL Location.dbo.Locations.LocationId
+- patients.patient_id matches HospitalDB.dbo.Appointments.PatientId
+- patients.facility_id -> SQL FacilityDB.dbo.Facilities.FacilityId
 
 IMPORTANT: Use query_type 'find' or 'aggregate'. Provide 'query_payload' as a valid JSON string.
 """
 
 @mcp.tool()
-def query_users_orders_db(sql_query: str) -> str:
+def query_hospital_db(sql_query: str) -> str:
     query_lower = sql_query.lower()
     if any(blocked in query_lower for blocked in ["insert ", "update ", "delete ", "drop ", "truncate ", "alter "]):
         return "Error: Only read-only SELECT queries are allowed."
         
-    conn_str = os.getenv("HR_DB_CONN", "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=Users;Trusted_Connection=yes;")
+    conn_str = os.getenv("HR_DB_CONN")
     try:
         conn = pyodbc.connect(conn_str, timeout=5)
         cursor = conn.cursor()
@@ -114,30 +116,30 @@ def query_users_orders_db(sql_query: str) -> str:
         return f"SQL Error: {str(e)}"
 
 # Dynamically set tool description from schema
-query_users_orders_db.__doc__ = f"""
-Executes a Microsoft SQL Server (T-SQL) query on Users and Orders Database.
+query_hospital_db.__doc__ = f"""
+Executes a Microsoft SQL Server (T-SQL) query on Hospital Database (Doctors & Appointments).
 
 SCHEMA:
-- Users: {SQL_USERS_ORDERS_DB_SCHEMA['Users']}
-- Orders: {SQL_USERS_ORDERS_DB_SCHEMA['Orders']}
-- User_Orders: {SQL_USERS_ORDERS_DB_SCHEMA['User_Orders']}
+- Doctors: {SQL_HOSPITAL_DB_SCHEMA['Doctors']}
+- Appointments: {SQL_HOSPITAL_DB_SCHEMA['Appointments']}
 
 SAMPLES:
-{json.dumps(SQL_USERS_ORDERS_DB_SAMPLES, indent=2)}
+{json.dumps(SQL_HOSPITAL_DB_SAMPLES, indent=2)}
 
 CROSS-DATABASE JOIN:
-Users.dbo.Users.LocationId = Location.dbo.Locations.LocationId
+- HospitalDB.dbo.Appointments.PatientId matches HealthcareDB.patients.patient_id
+- Doctors.FacilityId = FacilityDB.dbo.Facilities.FacilityId
 
 IMPORTANT: Use 'TOP 50' in your SELECT statements to avoid returning too much data.
 """
 
 @mcp.tool()
-def query_locations_db(sql_query: str) -> str:
+def query_facility_db(sql_query: str) -> str:
     query_lower = sql_query.lower()
     if any(blocked in query_lower for blocked in ["insert ", "update ", "delete ", "drop ", "truncate ", "alter "]):
         return "Error: Only read-only SELECT queries are allowed."
         
-    conn_str = os.getenv("SALES_DB_CONN", "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=Location;Trusted_Connection=yes;")
+    conn_str = os.getenv("SALES_DB_CONN")
     try:
         conn = pyodbc.connect(conn_str, timeout=5)
         cursor = conn.cursor()
@@ -157,16 +159,55 @@ def query_locations_db(sql_query: str) -> str:
         return f"SQL Error: {str(e)}"
 
 # Dynamically set tool description from schema
-query_locations_db.__doc__ = f"""
-Executes a Microsoft SQL Server (T-SQL) query on the Locations Database.
+query_facility_db.__doc__ = f"""
+Executes a Microsoft SQL Server (T-SQL) query on the Facilities Database.
 
 SCHEMA:
-- Locations: {SQL_LOCATIONS_DB_SCHEMA['Locations']}
+- Facilities: {SQL_FACILITIES_DB_SCHEMA['Facilities']}
 
 SAMPLES:
-{json.dumps(SQL_LOCATIONS_DB_SAMPLES, indent=2)}
+{json.dumps(SQL_FACILITIES_DB_SAMPLES, indent=2)}
 
 IMPORTANT: Use 'TOP 50' in your SELECT statements to avoid returning too much data.
+"""
+
+@mcp.tool()
+def query_pharmacy_db(sql_query: str) -> str:
+    """Executes a PostgreSQL query on the Pharmacy Database."""
+    query_lower = sql_query.lower()
+    if any(blocked in query_lower for blocked in ["insert ", "update ", "delete ", "drop ", "truncate ", "alter "]):
+        return "Error: Only read-only SELECT queries are allowed."
+        
+    conn_str = os.getenv("PG_DB_CONN")
+    try:
+        conn = psycopg2.connect(conn_str)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute(sql_query)
+        
+        results = cursor.fetchall()
+        
+        json_output = json.dumps(results, default=str)
+        if len(results) > 50:
+            return json.dumps(results[:50], default=str) + "\n\n(Warning: Results limited to 50 records to prevent memory crash.)"
+        return json_output
+    except Exception as e:
+        return f"PostgreSQL Error: {str(e)}"
+    finally:
+        if 'conn' in locals():
+            conn.close()
+
+# Dynamically set tool description from schema
+query_pharmacy_db.__doc__ = f"""
+Executes a PostgreSQL query on the Pharmacy Inventory and Prescriptions Database.
+
+SCHEMA:
+- Medicines: {POSTGRES_PHARMACY_DB_SCHEMA['Medicines']}
+- Prescriptions: {POSTGRES_PHARMACY_DB_SCHEMA['Prescriptions']}
+
+SAMPLES:
+{json.dumps(POSTGRES_PHARMACY_DB_SAMPLES, indent=2)}
+
+IMPORTANT: Provide a valid PostgreSQL SELECT statement. Use 'LIMIT 50' to avoid large data returns.
 """
 
 if __name__ == "__main__":
