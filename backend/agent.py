@@ -102,9 +102,16 @@ async def run_agent(user_input: str):
                 
                 # Execute graph with streaming events
                 system_prompt = (
-                    "You are a helpful data assistant. When providing lists of records from the database "
-                    "(Users, Orders, Customers, or Locations), you MUST present the result in a clean "
-                    "Markdown TABLE format. Only use plain text if a table is not appropriate (e.g., answering a single fact)."
+                    "You are a powerful multi-database healthcare assistant. You have access to SQL Server (Hospital & Facilities), "
+                    "PostgreSQL (Pharmacy), and MongoDB (Healthcare). "
+                    "\n\nCROSS-DATABASE CAPABILITIES:"
+                    "\n- You can link Appointments (SQL) to Patients (Mongo) using PatientId."
+                    "\n- You can link Doctors (SQL) to Facilities (SQL) using FacilityId."
+                    "\n- You can link Prescriptions (PostgreSQL) to Patients (Mongo) and Doctors (SQL)."
+                    "\n\nGUIDELINES:"
+                    "\n1. When asked for multi-entity info (e.g., Doctor + Appointments + Patient details), execute multiple tool calls sequentially to gather data from different databases."
+                    "\n2. Perform the join in your reasoning mind and present the final merged data in a clean Markdown TABLE."
+                    "\n3. If a specific entity (like a Doctor) isn't found, inform the user and suggest searching for similar records."
                 )
                 inputs = {
                     "messages": [

@@ -1,0 +1,103 @@
+{
+    "sql_server_hospital": {
+        "schema": {
+            "Doctors": {
+                "columns": [
+                    "DoctorId (PK) (uniqueidentifier)",
+                    "FirstName (nvarchar)",
+                    "LastName (nvarchar)",
+                    "Specialization (nvarchar)",
+                    "EmailId (nvarchar)",
+                    "FacilityId (int)"
+                ]
+            },
+            "Appointments": {
+                "columns": [
+                    "AppointmentId (PK) (uniqueidentifier)",
+                    "DoctorId (uniqueidentifier)",
+                    "PatientId (nvarchar)",
+                    "AppointmentDate (datetime)",
+                    "Status (nvarchar)"
+                ]
+            }
+        },
+        "relationships": []
+    },
+    "sql_server_facilities": {
+        "schema": {
+            "Facilities": {
+                "columns": [
+                    "FacilityId (PK) (int)",
+                    "Name (nvarchar)",
+                    "Address (nvarchar)",
+                    "City (nvarchar)",
+                    "State (nvarchar)",
+                    "Country (nvarchar)",
+                    "ZipCode (nvarchar)"
+                ]
+            }
+        },
+        "relationships": []
+    },
+    "postgres_pharmacy": {
+        "schema": {
+            "prescriptions": {
+                "columns": [
+                    "prescription_id (PK) (uuid)",
+                    "patient_id (character varying)",
+                    "doctor_id (uuid)",
+                    "medicine_id (integer)",
+                    "dosage (character varying)",
+                    "issued_date (date)"
+                ]
+            },
+            "medicines": {
+                "columns": [
+                    "medicine_id (PK) (integer)",
+                    "name (character varying)",
+                    "manufacturer (character varying)",
+                    "price (numeric)",
+                    "inventory_count (integer)",
+                    "category (character varying)"
+                ]
+            }
+        },
+        "relationships": [
+            "prescriptions.medicine_id -> medicines.medicine_id"
+        ]
+    },
+    "mongodb_healthcare": {
+        "schema": {
+            "encounters": {
+                "description": "Collection encounters",
+                "fields": {
+                    "encounter_id": "str",
+                    "patient_id": "str",
+                    "reason": "str",
+                    "diagnosis": "str",
+                    "medications": "LIST of str",
+                    "timestamp": "datetime"
+                }
+            },
+            "patients": {
+                "description": "Collection patients",
+                "fields": {
+                    "patient_id": "str",
+                    "profile": {
+                        "name": "str",
+                        "age": "int",
+                        "gender": "str"
+                    },
+                    "clinical": {
+                        "blood_type": "str",
+                        "allergies": "LIST of items",
+                        "chronic_conditions": "LIST of str"
+                    },
+                    "facility_id": "int",
+                    "is_active": "bool",
+                    "created_at": "datetime"
+                }
+            }
+        }
+    }
+}

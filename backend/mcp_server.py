@@ -77,8 +77,7 @@ query_healthcare_db.__doc__ = f"""
 Query the MongoDB HealthcareDB for patient profiles and medical encounters.
 
 SCHEMA:
-- patients: {MONGODB_HEALTHCARE_DB_SCHEMA['patients']}
-- encounters: {MONGODB_HEALTHCARE_DB_SCHEMA['encounters']}
+{json.dumps(MONGODB_HEALTHCARE_DB_SCHEMA, indent=2)}
 
 SAMPLES:
 {json.dumps(MONGODB_HEALTHCARE_DB_SAMPLES, indent=2)}
@@ -120,8 +119,7 @@ query_hospital_db.__doc__ = f"""
 Executes a Microsoft SQL Server (T-SQL) query on Hospital Database (Doctors & Appointments).
 
 SCHEMA:
-- Doctors: {SQL_HOSPITAL_DB_SCHEMA['Doctors']}
-- Appointments: {SQL_HOSPITAL_DB_SCHEMA['Appointments']}
+{json.dumps(SQL_HOSPITAL_DB_SCHEMA, indent=2)}
 
 SAMPLES:
 {json.dumps(SQL_HOSPITAL_DB_SAMPLES, indent=2)}
@@ -163,7 +161,7 @@ query_facility_db.__doc__ = f"""
 Executes a Microsoft SQL Server (T-SQL) query on the Facilities Database.
 
 SCHEMA:
-- Facilities: {SQL_FACILITIES_DB_SCHEMA['Facilities']}
+{json.dumps(SQL_FACILITIES_DB_SCHEMA, indent=2)}
 
 SAMPLES:
 {json.dumps(SQL_FACILITIES_DB_SAMPLES, indent=2)}
@@ -201,8 +199,7 @@ query_pharmacy_db.__doc__ = f"""
 Executes a PostgreSQL query on the Pharmacy Inventory and Prescriptions Database.
 
 SCHEMA:
-- Medicines: {POSTGRES_PHARMACY_DB_SCHEMA['Medicines']}
-- Prescriptions: {POSTGRES_PHARMACY_DB_SCHEMA['Prescriptions']}
+{json.dumps(POSTGRES_PHARMACY_DB_SCHEMA, indent=2)}
 
 SAMPLES:
 {json.dumps(POSTGRES_PHARMACY_DB_SAMPLES, indent=2)}
