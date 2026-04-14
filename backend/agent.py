@@ -35,10 +35,11 @@ async def run_agent(user_input: str):
     Invokes the LangGraph execution flow and yields chunks of the response.
     """
     try:
-        # Setup MCP Client
+        # Setup MCP Client with absolute path to ensure it always finds mcp_server.py
+        server_script = os.path.join(os.path.dirname(__file__), "mcp_server.py")
         server_params = StdioServerParameters(
             command=sys.executable,
-            args=["mcp_server.py"],
+            args=[server_script],
         )
         
         async with stdio_client(server_params) as (read, write):
@@ -50,8 +51,8 @@ async def run_agent(user_input: str):
                 tool_node = ToolNode(tools)
                 
                 # Configure LLM based on provider
-                provider = os.getenv("MODEL_PROVIDER", "openrouter").lower()
-                model_name = os.getenv("MODEL_NAME", "openai/gpt-4o-mini")
+                provider = os.getenv("MODEL_PROVIDER", "groq").lower()
+                model_name = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
                 
                 if provider == "groq":
                     llm = ChatGroq(
@@ -62,8 +63,8 @@ async def run_agent(user_input: str):
                     ).bind_tools(tools)
                 elif provider == "azure":
                     llm = AzureChatOpenAI(
-                        api_key=os.getenv("AZURE_OPENAI_API_KEY", os.getenv("OPENROUTER_API_KEY")),
-                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT", os.getenv("OPENROUTER_BASE_URL")),
+                        api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
                         azure_deployment=model_name,
                         api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-15-preview"),
                         temperature=0,
@@ -102,9 +103,16 @@ async def run_agent(user_input: str):
                 
                 # Execute graph with streaming events
                 system_prompt = (
-                    "You are a helpful data assistant. When providing lists of records from the database "
-                    "(Users, Orders, Customers, or Locations), you MUST present the result in a clean "
-                    "Markdown TABLE format. Only use plain text if a table is not appropriate (e.g., answering a single fact)."
+                    "You are a powerful multi-database healthcare assistant. You have access to SQL Server (Hospital & Facilities), "
+                    "PostgreSQL (Pharmacy), and MongoDB (Healthcare). "
+                    "\n\nCROSS-DATABASE CAPABILITIES:"
+                    "\n- You can link Appointments (SQL) to Patients (Mongo) using PatientId."
+                    "\n- You can link Doctors (SQL) to Facilities (SQL) using FacilityId."
+                    "\n- You can link Prescriptions (PostgreSQL) to Patients (Mongo) and Doctors (SQL)."
+                    "\n\nGUIDELINES:"
+                    "\n1. When asked for multi-entity info (e.g., Doctor + Appointments + Patient details), execute multiple tool calls sequentially to gather data from different databases."
+                    "\n2. Perform the join in your reasoning mind and present the final merged data in a clean Markdown TABLE."
+                    "\n3. If a specific entity (like a Doctor) isn't found, inform the user and suggest searching for similar records."
                 )
                 inputs = {
                     "messages": [
