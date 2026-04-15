@@ -35,10 +35,11 @@ async def run_agent(user_input: str):
     Invokes the LangGraph execution flow and yields chunks of the response.
     """
     try:
-        # Setup MCP Client
+        # Setup MCP Client with absolute path to ensure it always finds mcp_server.py
+        server_script = os.path.join(os.path.dirname(__file__), "mcp_server.py")
         server_params = StdioServerParameters(
             command=sys.executable,
-            args=["mcp_server.py"],
+            args=[server_script],
         )
         
         async with stdio_client(server_params) as (read, write):
@@ -102,16 +103,15 @@ async def run_agent(user_input: str):
                 
                 # Execute graph with streaming events
                 system_prompt = (
-                    "You are a powerful multi-database healthcare assistant. You have access to SQL Server (Hospital & Facilities), "
-                    "PostgreSQL (Pharmacy), and MongoDB (Healthcare). "
+                    "You are a powerful multi-database retail assistant. You have access to SQL Server (Inventory & Stock), "
+                    "PostgreSQL (Sales & Transactions), and MongoDB (Customers & Loyalty). "
                     "\n\nCROSS-DATABASE CAPABILITIES:"
-                    "\n- You can link Appointments (SQL) to Patients (Mongo) using PatientId."
-                    "\n- You can link Doctors (SQL) to Facilities (SQL) using FacilityId."
-                    "\n- You can link Prescriptions (PostgreSQL) to Patients (Mongo) and Doctors (SQL)."
+                    "\n- You can link Sales/Orders (Postgres) to Customers (Mongo) using CustomerId."
+                    "\n- You can link Inventory/Products (SQL) to Sales (Postgres) using ProductId."
                     "\n\nGUIDELINES:"
-                    "\n1. When asked for multi-entity info (e.g., Doctor + Appointments + Patient details), execute multiple tool calls sequentially to gather data from different databases."
-                    "\n2. Perform the join in your reasoning mind and present the final merged data in a clean Markdown TABLE."
-                    "\n3. If a specific entity (like a Doctor) isn't found, inform the user and suggest searching for similar records."
+                    "\n1. When asked for complex info (e.g., Best-selling products + Customer details), execute multiple tool calls sequentially."
+                    "\n2. Present final merged results in a clean Markdown TABLE."
+                    "\n3. Perform joins in your reasoning and explain the logical link between databases if asked."
                 )
                 inputs = {
                     "messages": [
