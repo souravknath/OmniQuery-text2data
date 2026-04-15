@@ -1,7 +1,6 @@
-import warnings
-warnings.filterwarnings("ignore")
-import json
+import sys
 import os
+import json
 import pyodbc
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -9,7 +8,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from mcp.server.fastmcp import FastMCP
 
-# Import Schema Metadata
+# We will now Lazy-Load the metadata within a tool to ensure fast startup and avoid pipe corruption.
 from database_schema import (
     INVENTORY_DB_SCHEMA, INVENTORY_DB_SAMPLES,
     SALES_DB_SCHEMA, SALES_DB_SAMPLES,
@@ -24,11 +23,24 @@ mcp = FastMCP("OmniQuery Retail & Sales Engine")
 # MongoDB Layer
 _mongo_client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"))
 
-def validate_nosql_query(query_dict: dict):
-    query_str = json.dumps(query_dict).lower()
-    blocked = ["$delete", "$update", "$set", "$unset", "$drop"]
-    if any(op in query_str for op in blocked):
-        raise ValueError("Unsafe NoSQL query detected.")
+@mcp.tool()
+def get_database_info() -> str:
+    """Returns the schema, sample data, and relationships for all available databases (SQL, Postgres, Mongo). Call this FIRST to understand the data structure."""
+    info = {
+        "InventoryDB_SQL_Server": {
+            "schema": INVENTORY_DB_SCHEMA,
+            "samples": INVENTORY_DB_SAMPLES
+        },
+        "SalesDB_PostgreSQL": {
+            "schema": SALES_DB_SCHEMA,
+            "samples": SALES_DB_SAMPLES
+        },
+        "CustomerDB_MongoDB": {
+            "schema": CUSTOMER_DB_SCHEMA,
+            "samples": CUSTOMER_DB_SAMPLES
+        }
+    }
+    return json.dumps(info, indent=2, default=str)
 
 def execute_nosql(db_name: str, collection_name: str, query_type: str, query_payload: str):
     try:
@@ -49,18 +61,13 @@ def execute_nosql(db_name: str, collection_name: str, query_type: str, query_pay
 
 @mcp.tool()
 def query_customer_db(collection_name: str, query_payload: str, query_type: str = "find") -> str:
+    """Query MongoDB for customer profiles and loyalty data. Use find or aggregate types."""
     return execute_nosql(os.getenv("CUSTOMER_DB", "CustomerDB"), collection_name, query_type.lower(), query_payload)
-
-query_customer_db.__doc__ = f"""
-Query the MongoDB CustomerDB for customer profiles and loyalty data.
-SCHEMA: {json.dumps(CUSTOMER_DB_SCHEMA, indent=2)}
-SAMPLES: {json.dumps(CUSTOMER_DB_SAMPLES, indent=2)}
-"""
 
 @mcp.tool()
 def query_inventory_db(sql_query: str) -> str:
-    """Query SQL Server InventoryDB for products, stock, and suppliers."""
-    conn_str = os.getenv("HR_DB_CONN") or "DRIVER={{ODBC Driver 17 for SQL Server}};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
+    """Query SQL Server InventoryDB for products and stock. Use T-SQL and quote [keywords]."""
+    conn_str = os.getenv("SQL_DB_CONN") or "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
     try:
         conn = pyodbc.connect(conn_str, timeout=5)
         cursor = conn.cursor()
@@ -71,15 +78,9 @@ def query_inventory_db(sql_query: str) -> str:
     except Exception as e:
         return f"SQL Error: {e}"
 
-query_inventory_db.__doc__ = f"""
-Query SQL Server InventoryDB for products and stock.
-SCHEMA: {json.dumps(INVENTORY_DB_SCHEMA, indent=2)}
-SAMPLES: {json.dumps(INVENTORY_DB_SAMPLES, indent=2)}
-"""
-
 @mcp.tool()
 def query_sales_db(sql_query: str) -> str:
-    """Query PostgreSQL SalesDB for orders, transactions, and revenue."""
+    """Query PostgreSQL SalesDB for orders and revenue. Use Standard SQL and quote \"keywords\"."""
     conn_str = os.getenv("PG_DB_CONN")
     try:
         conn = psycopg2.connect(conn_str)
@@ -91,12 +92,6 @@ def query_sales_db(sql_query: str) -> str:
         return f"Postgres Error: {e}"
     finally:
         if 'conn' in locals(): conn.close()
-
-query_sales_db.__doc__ = f"""
-Query PostgreSQL SalesDB for orders and transactions.
-SCHEMA: {json.dumps(SALES_DB_SCHEMA, indent=2)}
-SAMPLES: {json.dumps(SALES_DB_SAMPLES, indent=2)}
-"""
 
 if __name__ == "__main__":
     mcp.run()

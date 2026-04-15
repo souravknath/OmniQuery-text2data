@@ -113,8 +113,7 @@ The application follows a modular architecture designed for scalability and secu
 | `MODEL_PROVIDER` | `groq` or `openrouter` | `openrouter` |
 | `MODEL_NAME` | The model identifier (e.g., `llama3-70b-8192` or `openai/gpt-4o-mini`) | `openai/gpt-4o-mini` |
 | `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/` |
-| `SALES_DB_CONN` | SQL connection string for Sales DB | - |
-| `HR_DB_CONN` | SQL connection string for HR DB | - |
+| `SQL_DB_CONN` | SQL connection string for Sales DB | - |
 
 ---
 

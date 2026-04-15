@@ -3,6 +3,7 @@ import pyodbc
 import psycopg2
 from pymongo import MongoClient
 import json
+import sys
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,7 +30,8 @@ def fetch_sql_server_metadata(conn_str):
 
         schema = {}
         for table in tables:
-            cursor.execute(f"SELECT COUNT(*) FROM {table}")
+            # Quote table name for SQL Server
+            cursor.execute(f"SELECT COUNT(*) FROM [{table}]")
             count = cursor.fetchone()[0]
             
             cursor.execute(f"SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table}'")
@@ -59,7 +61,7 @@ def fetch_sql_server_metadata(conn_str):
         # 3. Fetch Samples
         samples = {}
         for table in tables:
-            cursor.execute(f"SELECT TOP 1 * FROM {table}")
+            cursor.execute(f"SELECT TOP 1 * FROM [{table}]")
             row = cursor.fetchone()
             if row:
                 columns = [column[0] for column in cursor.description]
@@ -68,7 +70,8 @@ def fetch_sql_server_metadata(conn_str):
         conn.close()
         return {"schema": schema, "relationships": relationships, "samples": samples}
     except Exception as e:
-        print(f"SQL Server Error ({conn_str}): {e}")
+        # Use stderr for actual errors
+        sys.stderr.write(f"SQL Server Metadata Error: {e}\n")
         return {"schema": {}, "relationships": [], "samples": {}}
 
 def fetch_postgres_metadata(conn_str):
@@ -94,7 +97,8 @@ def fetch_postgres_metadata(conn_str):
         
         schema = {}
         for table in tables:
-            cursor.execute(f"SELECT COUNT(*) FROM {table}")
+            # Quote table name for Postgres
+            cursor.execute(f'SELECT COUNT(*) FROM "{table}"')
             count = cursor.fetchone()[0]
 
             cursor.execute(f"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}' AND table_schema = 'public'")
@@ -122,14 +126,14 @@ def fetch_postgres_metadata(conn_str):
         from psycopg2.extras import RealDictCursor
         dict_cursor = conn.cursor(cursor_factory=RealDictCursor)
         for table in tables:
-            dict_cursor.execute(f"SELECT * FROM {table} LIMIT 1")
+            dict_cursor.execute(f'SELECT * FROM "{table}" LIMIT 1')
             row = dict_cursor.fetchone()
             if row: samples[table] = [row]
             
         conn.close()
         return {"schema": schema, "relationships": relationships, "samples": samples}
     except Exception as e:
-        print(f"Postgres Error: {e}")
+        sys.stderr.write(f"Postgres Metadata Error: {e}\n")
         return {"schema": {}, "relationships": [], "samples": {}}
 
 def fetch_mongo_metadata(mongo_uri, db_name):
@@ -147,7 +151,6 @@ def fetch_mongo_metadata(mongo_uri, db_name):
         for coll_name in collections:
             coll = db[coll_name]
             sample = coll.find_one({}, {'_id': 0})
-            
             count = coll.count_documents({})
             
             def infer_type(v):
@@ -164,5 +167,5 @@ def fetch_mongo_metadata(mongo_uri, db_name):
         client.close()
         return {"schema": schema, "samples": samples}
     except Exception as e:
-        print(f"Mongo Error: {e}")
+        sys.stderr.write(f"Mongo Metadata Error: {e}\n")
         return {"schema": {}, "samples": {}}

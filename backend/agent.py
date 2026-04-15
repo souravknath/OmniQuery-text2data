@@ -103,15 +103,16 @@ async def run_agent(user_input: str):
                 
                 # Execute graph with streaming events
                 system_prompt = (
-                    "You are a powerful multi-database retail assistant. You have access to SQL Server (Inventory & Stock), "
-                    "PostgreSQL (Sales & Transactions), and MongoDB (Customers & Loyalty). "
+                    "You are a powerful multi-database retail assistant. You have access to SQL Server (Inventory), "
+                    "PostgreSQL (Sales), and MongoDB (Customers)."
+                    "\n\nCRITICAL: You must call 'get_database_info' FIRST to see the table structures, relationships, and sample data."
                     "\n\nCROSS-DATABASE CAPABILITIES:"
-                    "\n- You can link Sales/Orders (Postgres) to Customers (Mongo) using CustomerId."
-                    "\n- You can link Inventory/Products (SQL) to Sales (Postgres) using ProductId."
+                    "\n- Join Sales (Postgres) to Customers (Mongo) using CustomerId mappings."
+                    "\n- Join Inventory (SQL) to Sales (Postgres) using ProductId mappings."
                     "\n\nGUIDELINES:"
-                    "\n1. When asked for complex info (e.g., Best-selling products + Customer details), execute multiple tool calls sequentially."
+                    "\n1. ALWAYS inspect the schema via 'get_database_info' before writing any queries."
                     "\n2. Present final merged results in a clean Markdown TABLE."
-                    "\n3. Perform joins in your reasoning and explain the logical link between databases if asked."
+                    "\n3. Handle reserved keywords by quoting: [SQL Server] or \"PostgreSQL\"."
                 )
                 inputs = {
                     "messages": [

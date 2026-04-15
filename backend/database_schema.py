@@ -1,4 +1,5 @@
 import os
+import sys
 from dotenv import load_dotenv
 from schema_fetcher import (
     fetch_sql_server_metadata,
@@ -9,13 +10,13 @@ from schema_fetcher import (
 load_dotenv()
 
 # --- Connection Strings ---
-SQL_DB_CONN = os.getenv("HR_DB_CONN") or "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
+SQL_DB_CONN = os.getenv("SQL_DB_CONN") or "DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
 PG_DB_CONN = os.getenv("PG_DB_CONN") or "dbname=SalesDB user=postgres password=postgres host=localhost port=5432"
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
 MONGO_DB_NAME = os.getenv("CUSTOMER_DB", "CustomerDB")
 
 # --- Fetch Metadata (Database-First) ---
-print(f"Refreshing Retail Metadata [Inventory (SQL), Sales (PG), Customers (Mongo)]...")
+# Silent initialization to protect MCP stdout protocol
 
 # 1. SQL Server - Inventory Metadata
 inventory_meta = fetch_sql_server_metadata(SQL_DB_CONN)
@@ -35,5 +36,3 @@ if sales_meta["relationships"]:
 customer_meta = fetch_mongo_metadata(MONGO_URI, MONGO_DB_NAME)
 CUSTOMER_DB_SCHEMA = customer_meta["schema"]
 CUSTOMER_DB_SAMPLES = customer_meta["samples"]
-
-print("Retail Metadata Refresh Complete.")
