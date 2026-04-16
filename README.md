@@ -62,14 +62,6 @@ The application follows a modular architecture designed for scalability and secu
    ```
    *Edit `.env` to include your API keys and database connection strings.*
 
-### Database Initialization
-
-1. **Seed the MongoDB database**:
-   ```bash
-   python seed_customer_db.py
-   ```
-   *This will populate your local MongoDB with sample customer, activity, and ticket data.*
-
 ### Frontend Setup
 
 1. **Navigate to frontend directory**:
@@ -113,8 +105,7 @@ The application follows a modular architecture designed for scalability and secu
 | `MODEL_PROVIDER` | `groq` or `openrouter` | `openrouter` |
 | `MODEL_NAME` | The model identifier (e.g., `llama3-70b-8192` or `openai/gpt-4o-mini`) | `openai/gpt-4o-mini` |
 | `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/` |
-| `SALES_DB_CONN` | SQL connection string for Sales DB | - |
-| `HR_DB_CONN` | SQL connection string for HR DB | - |
+| `SQL_DB_CONN` | SQL connection string for Sales DB | - |
 
 ---
 
