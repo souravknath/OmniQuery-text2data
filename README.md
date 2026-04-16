@@ -62,14 +62,6 @@ The application follows a modular architecture designed for scalability and secu
    ```
    *Edit `.env` to include your API keys and database connection strings.*
 
-### Database Initialization
-
-1. **Seed the MongoDB database**:
-   ```bash
-   python seed_customer_db.py
-   ```
-   *This will populate your local MongoDB with sample customer, activity, and ticket data.*
-
 ### Frontend Setup
 
 1. **Navigate to frontend directory**:
