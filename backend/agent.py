@@ -6,7 +6,7 @@ import sys
 import json
 import logging
 import tiktoken
-from typing import TypedDict, Annotated, List
+from typing import TypedDict, Annotated, List, Optional
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
@@ -17,6 +17,8 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_groq import ChatGroq
+from schema_analyzer import schema_analyzer
+from query_generator import query_generator
 
 load_dotenv(override=True)
 
@@ -128,6 +130,55 @@ async def run_agent(user_input: str):
                         }
                     ).bind_tools(tools)
                 
+                # Cache schema once on first query
+                schema_cached = False
+                
+                async def auto_generate_query_if_possible(user_message: str) -> Optional[str]:
+                    """
+                    Try to auto-generate a SQL query from user intent using metadata.
+                    Returns the query if successful, None otherwise (fallback to LLM).
+                    """
+                    nonlocal schema_cached
+                    
+                    try:
+                        # Cache schema once
+                        if not schema_cached:
+                            logger.info("\n" + "="*80)
+                            logger.info("CACHING DATABASE SCHEMAS")
+                            logger.info("="*80)
+                            
+                            # Get database info once and cache it
+                            get_db_info_tool = next((t for t in tools if t.name == 'get_database_info'), None)
+                            if get_db_info_tool:
+                                schema_str = await get_db_info_tool.func()
+                                parsed_schema = query_generator.analyzer.parse_schema_info(schema_str)
+                                
+                                # Cache for each database
+                                for db_name, db_info in parsed_schema.items():
+                                    schema_analyzer.cache.set_schema(db_name, db_info)
+                                
+                                logger.info(f"Cached schemas for: {list(parsed_schema.keys())}\n")
+                            schema_cached = True
+                        
+                        # Parse user intent and generate query
+                        logger.info("="*80)
+                        logger.info("AUTO-GENERATING QUERY FROM METADATA")
+                        logger.info("="*80)
+                        
+                        intent = query_generator.parse_user_intent(user_message)
+                        query = query_generator.generate_from_intent(intent)
+                        
+                        if query:
+                            logger.info(f"✅ Successfully auto-generated query (0 LLM tokens used)\n")
+                            return query
+                        else:
+                            logger.info(f"❌ Could not auto-generate query, falling back to LLM\n")
+                            return None
+                            
+                    except Exception as e:
+                        logger.warning(f"Error in auto-generate: {e}, falling back to LLM")
+                        return None
+                
                 async def call_model(state: AgentState):
                     """Main reasoning node."""
                     messages = state['messages']
@@ -168,6 +219,24 @@ async def run_agent(user_input: str):
                             content = msg.content if isinstance(msg.content, str) else str(msg.content)
                             total_tokens += estimate_tokens(content)
                         logger.info(f"Adjusted token count: {total_tokens}\n")
+                    
+                    # Try to auto-generate query from user intent (BEFORE LLM)
+                    user_input = None
+                    for msg in messages:
+                        if isinstance(msg, HumanMessage):
+                            user_input = msg.content if isinstance(msg.content, str) else str(msg.content)
+                            break
+                    
+                    auto_generated_query = None
+                    if user_input:
+                        auto_generated_query = await auto_generate_query_if_possible(user_input)
+                        
+                        if auto_generated_query:
+                            # Add auto-generated query to the message context
+                            auto_gen_msg = SystemMessage(
+                                content=f"✅ Auto-Generated Query (0 LLM tokens used):\n\n```sql\n{auto_generated_query}\n```\n\nPlease execute this query and return the results."
+                            )
+                            messages.append(auto_gen_msg)
                     
                     logger.info("="*80)
                     logger.info("SENDING PROMPT TO LLM")
@@ -213,14 +282,24 @@ async def run_agent(user_input: str):
                 system_prompt = (
                     "You are a powerful multi-database retail assistant. You have access to SQL Server (Inventory), "
                     "PostgreSQL (Sales), and MongoDB (Customers)."
-                    "\n\nCRITICAL: You must call 'get_database_info' FIRST to see the table structures, relationships, and sample data."
+                    "\n\n⚡ OPTIMIZED QUERY MODE:"
+                    "\n→ Queries are auto-generated from schema metadata (NOT via LLM)."
+                    "\n→ This saves tokens and ensures deterministic, fast queries."
+                    "\n→ Your role: understand user intent, execute pre-generated queries, explain results."
+                    "\n\nFLOW:"
+                    "\n1. User asks a question (e.g., 'Get orders for customer Smith')"
+                    "\n2. System parses intent and generates SQL automatically"
+                    "\n3. SQL executes against databases"
+                    "\n4. You explain/format the results in Markdown"
                     "\n\nCROSS-DATABASE CAPABILITIES:"
-                    "\n- Join Sales (Postgres) to Customers (Mongo) using CustomerId mappings."
-                    "\n- Join Inventory (SQL) to Sales (Postgres) using ProductId mappings."
-                    "\n\nGUIDELINES:"
-                    "\n1. ALWAYS inspect the schema via 'get_database_info' before writing any queries."
-                    "\n2. Present final merged results in a clean Markdown TABLE."
-                    "\n3. Handle reserved keywords by quoting: [SQL Server] or \"PostgreSQL\"."
+                    "\n- Join Sales (Postgres) to Customers (Mongo) using CustomerId"
+                    "\n- Join Inventory (SQL) to Sales (Postgres) using ProductId"
+                    "\n\nRULES:"
+                    "\n1. If query generation fails, explain what additional info is needed."
+                    "\n2. For ambiguous queries (lastname='Smith' matches 10+ customers), ask for clarification."
+                    "\n3. Present results in clean Markdown TABLES."
+                    "\n4. For large result sets (>500 rows), suggest refining the filter."
+                    "\n5. Always mention how many rows/records were returned."
                 )
                 inputs = {
                     "messages": [
