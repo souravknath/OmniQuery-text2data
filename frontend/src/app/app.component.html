@@ -11,12 +11,28 @@
 
   <main class="chat-container">
     <div class="chat-messages">
-      <div *ngFor="let msg of messages; let last = last" class="message-wrapper" [class.user]="msg.sender === 'user'">
-        <!-- Show bubble if it has text OR if it's the last agent message being streamed -->
-        <div class="message-bubble" *ngIf="msg.text || (last && msg.sender === 'agent' && isLoading)">
+      <div *ngFor="let msg of messages; let i = index; let last = last" class="message-wrapper" [class.user]="msg.sender === 'user'">
+        <!-- Show bubble if it has text -->
+        <div class="message-bubble" *ngIf="msg.text">
+          <div class="message-actions" *ngIf="msg.sender === 'agent' && msg.hasTable">
+            <button class="viz-btn" (click)="toggleVisualization(i)" [class.active]="msg.showChart" title="Visualize Data">
+              <span class="icon">{{ msg.showChart ? '📋' : '📊' }}</span>
+              {{ msg.showChart ? 'Show Table' : 'Visualize' }}
+            </button>
+          </div>
 
-          <div class="message-content" [innerHTML]="renderMarkdown(msg.text)"></div>
-          <div class="message-meta">{{ msg.timestamp | date:'shortTime' }}</div>
+          <div class="message-content" *ngIf="!msg.showChart" [innerHTML]="msg.text | markdown"></div>
+          
+          <div class="chart-container" *ngIf="msg.showChart">
+            <canvas #chartCanvas [id]="'chart-' + i"></canvas>
+            <div *ngIf="!msg.chartData" class="chart-placeholder">
+              <span class="icon">⚠️</span>
+              <p>This table cannot be visualized as a chart.</p>
+              <button (click)="msg.showChart = false">Back to Table</button>
+            </div>
+          </div>
+
+          <div class="message-meta" *ngIf="msg.text">{{ msg.timestamp | date:'shortTime' }}</div>
         </div>
       </div>
       <div *ngIf="isLoading && !currentStatus" class="message-wrapper">
