@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import logging
 import pyodbc
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -9,6 +10,10 @@ from pymongo import MongoClient
 from mcp.server.fastmcp import FastMCP
 
 load_dotenv()
+
+# Initialize logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 # Initialize the MCP Server
 mcp = FastMCP("OmniQuery Retail & Sales Engine")
@@ -75,6 +80,17 @@ def execute_nosql(db_name: str, collection_name: str, query_type: str, query_pay
         db = client[db_name]
         collection = db[collection_name]
         
+        # Print final query
+        print("\n" + "="*80)
+        print(f"📊 FINAL MONGODB QUERY EXECUTING")
+        print("="*80)
+        print(f"Database: {db_name}")
+        print(f"Collection: {collection_name}")
+        print(f"Query Type: {query_type.upper()}")
+        print(f"Query Payload:\n{json.dumps(payload, indent=2, default=str)}")
+        print("="*80 + "\n")
+        logger.info(f"Executing MongoDB {query_type} on {db_name}.{collection_name}: {json.dumps(payload)}")
+        
         if query_type == "find":
             results = list(collection.find(payload, {'_id': 0}).limit(50))
         elif query_type == "aggregate":
@@ -84,7 +100,10 @@ def execute_nosql(db_name: str, collection_name: str, query_type: str, query_pay
             
         return json.dumps(results, default=str)
     except Exception as e:
-        return f"Error: {e}"
+        error_msg = f"Error: {e}"
+        print(f"❌ MongoDB Query Error: {error_msg}\n")
+        logger.error(f"MongoDB error: {error_msg}")
+        return error_msg
 
 
 @mcp.tool()
@@ -95,6 +114,14 @@ def query_customer_db(collection_name: str, query_payload: str, query_type: str 
 @mcp.tool()
 def query_inventory_db(sql_query: str) -> str:
     """Query SQL Server InventoryDB for products and stock. Use T-SQL and quote [keywords]."""
+    # Print final query
+    print("\n" + "="*80)
+    print(f"📊 FINAL SQL QUERY EXECUTING - SQL Server (Inventory DB)")
+    print("="*80)
+    print(f"SQL Query:\n{sql_query}")
+    print("="*80 + "\n")
+    logger.info(f"Executing SQL on InventoryDB: {sql_query}")
+    
     conn_str = os.getenv("SQL_DB_CONN") or r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
     conn = None
     try:
@@ -103,9 +130,13 @@ def query_inventory_db(sql_query: str) -> str:
         cursor.execute(sql_query)
         columns = [column[0] for column in cursor.description]
         results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(f"✅ Query executed successfully. Rows returned: {len(results)}\n")
         return json.dumps(results[:50], default=str)
     except Exception as e:
-        return f"SQL Error: {e}"
+        error_msg = f"SQL Error: {e}"
+        print(f"❌ SQL Query Error: {error_msg}\n")
+        logger.error(f"SQL Server error: {error_msg}")
+        return error_msg
     finally:
         if conn:
             try:
@@ -116,6 +147,14 @@ def query_inventory_db(sql_query: str) -> str:
 @mcp.tool()
 def query_sales_db(sql_query: str) -> str:
     """Query PostgreSQL SalesDB for orders and revenue. Use Standard SQL and quote \"keywords\"."""
+    # Print final query
+    print("\n" + "="*80)
+    print(f"📊 FINAL SQL QUERY EXECUTING - PostgreSQL (Sales DB)")
+    print("="*80)
+    print(f"SQL Query:\n{sql_query}")
+    print("="*80 + "\n")
+    logger.info(f"Executing SQL on SalesDB: {sql_query}")
+    
     conn_str = os.getenv("PG_DB_CONN")
     conn = None
     try:
@@ -123,9 +162,13 @@ def query_sales_db(sql_query: str) -> str:
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(sql_query)
         results = cursor.fetchall()
+        print(f"✅ Query executed successfully. Rows returned: {len(results)}\n")
         return json.dumps([dict(r) for r in results[:50]], default=str)
     except Exception as e:
-        return f"Postgres Error: {e}"
+        error_msg = f"Postgres Error: {e}"
+        print(f"❌ PostgreSQL Query Error: {error_msg}\n")
+        logger.error(f"PostgreSQL error: {error_msg}")
+        return error_msg
     finally:
         if conn:
             try:

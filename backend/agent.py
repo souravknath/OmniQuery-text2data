@@ -232,6 +232,14 @@ async def run_agent(user_input: str):
                         auto_generated_query = await auto_generate_query_if_possible(user_input)
                         
                         if auto_generated_query:
+                            # Print the auto-generated query that will be executed
+                            print("\n" + "="*80)
+                            print(f"🎯 AUTO-GENERATED QUERY DETECTED - Will be executed automatically")
+                            print("="*80)
+                            print(f"User Query: {user_input}")
+                            print(f"\nGenerated Query:\n{auto_generated_query}")
+                            print("="*80 + "\n")
+                            
                             # Add auto-generated query to the message context
                             auto_gen_msg = SystemMessage(
                                 content=f"✅ Auto-Generated Query (0 LLM tokens used):\n\n```sql\n{auto_generated_query}\n```\n\nPlease execute this query and return the results."

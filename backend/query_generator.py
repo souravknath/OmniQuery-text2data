@@ -254,9 +254,19 @@ class QueryGenerator:
                     limit=100
                 )
             
+            # Print final generated query prominently
+            print("\n" + "="*80)
+            print(f"✅ FINAL QUERY GENERATED (Auto-Generated - 0 LLM Tokens Used)")
+            print("="*80)
+            print(f"Database: {database}")
+            print(f"Action: {action.upper()}")
+            print(f"Query:\n{query}")
+            print("="*80 + "\n")
+            
             return query
         except Exception as e:
             logger.error(f"Error generating query: {e}")
+            print(f"❌ Error generating query: {e}\n")
             return None
 
 
