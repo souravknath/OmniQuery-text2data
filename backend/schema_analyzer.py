@@ -47,7 +47,7 @@ class SchemaAnalyzer:
     
     def parse_schema_info(self, raw_schema: str) -> Dict[str, Any]:
         """
-        Parse raw schema info from get_database_info and organize by database.
+        Parse raw schema info from get_database_info (JSON format) and organize by database.
         
         Returns:
         {
@@ -67,60 +67,100 @@ class SchemaAnalyzer:
             'sqlserver': {...},
         }
         """
+        import json
+        
         parsed = {
             'postgres': {'tables': {}, 'database': 'postgres'},
             'sqlserver': {'tables': {}, 'database': 'sqlserver'},
             'mongodb': {'tables': {}, 'database': 'mongodb'},
         }
         
-        # Split by database sections
-        sections = raw_schema.split('\n---\n')
+        try:
+            # Parse JSON schema from mcp_server
+            schema_json = json.loads(raw_schema)
+        except json.JSONDecodeError:
+            logger.warning("Failed to parse schema as JSON, attempting text parsing")
+            return parsed
         
-        for section in sections:
-            if not section.strip():
+        # Map database identifiers to normalized names
+        db_mapping = {
+            'InventoryDB_SQL_Server': 'sqlserver',
+            'SalesDB_PostgreSQL': 'postgres',
+            'CustomerDB_MongoDB': 'mongodb',
+        }
+        
+        # Process each database in the schema
+        for db_identifier, db_data in schema_json.items():
+            if db_identifier not in db_mapping:
                 continue
             
-            lines = section.strip().split('\n')
-            current_db = None
-            current_table = None
+            db_name = db_mapping[db_identifier]
+            schema_info = db_data.get('schema', {})
             
-            for line in lines:
-                line = line.strip()
-                if not line:
-                    continue
-                
-                # Detect database
-                if 'PostgreSQL' in line or 'Sales' in line:
-                    current_db = 'postgres'
-                elif 'SQL Server' in line or 'Inventory' in line:
-                    current_db = 'sqlserver'
-                elif 'MongoDB' in line or 'Customers' in line:
-                    current_db = 'mongodb'
-                
-                # Detect table
-                if line.startswith('Table:') or line.startswith('Collection:'):
-                    table_name = line.split(':')[1].strip()
-                    if current_db:
-                        current_table = table_name
-                        parsed[current_db]['tables'][table_name] = {
-                            'columns': [],
-                            'sample': [],
-                        }
-                
-                # Parse columns
-                if current_db and current_table and '(' in line and ':' in line:
-                    try:
-                        col_name = line.split('(')[0].strip()
-                        col_type = line.split('(')[1].split(')')[0].strip() if '(' in line else 'VARCHAR'
-                        is_key = 'PRIMARY' in line or 'FOREIGN' in line
+            print(f"\n[SCHEMA PARSE] Processing {db_identifier}: found {len(schema_info)} tables")
+            logger.info(f"Processing {db_identifier}: found {len(schema_info)} tables")
+            
+            # Process tables/collections
+            for table_name, table_info in schema_info.items():
+                # Handle both SQL (columns) and MongoDB (fields) formats
+                if 'columns' in table_info:
+                    columns_raw = table_info.get('columns', [])
+                    columns = []
+                    
+                    for col_def in columns_raw:
+                        # Column format: "Column_Name (type)" or "Column_Name (PK) (type)"
+                        # Example: "Product_ID (PK) (int)"
+                        col_name = col_def.split('(')[0].strip()
                         
-                        parsed[current_db]['tables'][current_table]['columns'].append({
+                        # Check if it's a primary key
+                        is_pk = 'PK' in col_def
+                        is_fk = 'FK' in col_def
+                        
+                        # Extract type
+                        col_type = 'VARCHAR'
+                        if '(' in col_def:
+                            parts = col_def.split('(')
+                            for part in parts:
+                                cleaned = part.replace(')', '').strip()
+                                if cleaned and cleaned not in ['PK', 'FK'] and not cleaned.startswith('Column'):
+                                    col_type = cleaned
+                                    break
+                        
+                        columns.append({
                             'name': col_name,
                             'type': col_type,
-                            'key': 'PRIMARY' if 'PRIMARY' in line else ('FOREIGN' if 'FOREIGN' in line else None),
+                            'key': 'PRIMARY' if is_pk else ('FOREIGN' if is_fk else None),
                         })
-                    except Exception as e:
-                        logger.debug(f"Could not parse column line: {line}, error: {e}")
+                
+                elif 'fields' in table_info:
+                    # MongoDB format: 'fields' is a dict of field_name -> type
+                    fields_raw = table_info.get('fields', {})
+                    columns = []
+                    
+                    for field_name, field_type in fields_raw.items():
+                        columns.append({
+                            'name': field_name,
+                            'type': str(field_type) if field_type else 'str',
+                            'key': None,
+                        })
+                
+                else:
+                    columns = []
+                
+                # Store parsed table info
+                table_key = table_name.lower()
+                parsed[db_name]['tables'][table_key] = {
+                    'columns': columns,
+                    'sample': db_data.get('samples', {}).get(table_name, []),
+                    'record_count': table_info.get('record_count', 0),
+                }
+                
+                print(f"  - {table_name} -> {table_key}: {len(columns)} columns")
+                logger.info(f"  - {table_name} -> {table_key}: {len(columns)} columns")
+                if columns:
+                    col_names = [c['name'] for c in columns[:3]]
+                    print(f"    First 3 columns: {col_names}")
+                    logger.info(f"    Columns: {col_names}...")
         
         return parsed
     
