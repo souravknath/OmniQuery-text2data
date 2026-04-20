@@ -37,7 +37,7 @@ console_handler.setFormatter(formatter)
 console_handler.setLevel(logging.INFO)
 
 # File handler
-file_handler = logging.FileHandler(log_file)
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
 file_handler.setFormatter(formatter)
 file_handler.setLevel(logging.INFO)
 
@@ -138,7 +138,8 @@ async def run_agent(user_input: str):
                         content = msg.content if isinstance(msg.content, str) else str(msg.content)
                         total_tokens += estimate_tokens(content)
                     
-                    max_tpm = 8000  # Groq on-demand limit
+                    # Load token limit from env or default to a safe 128k context window
+                    max_tpm = int(os.getenv("MAX_TOKEN_LIMIT", "128000")) 
                     safe_threshold = int(max_tpm * 0.95)  # Use 95% to be safe
                     
                     logger.info("\n" + "="*80)
@@ -150,15 +151,26 @@ async def run_agent(user_input: str):
                     
                     # If exceeding limit, keep only system prompt + last 2 messages
                     if total_tokens > safe_threshold:
-                        logger.warning(f"\n⚠️  TOKEN COUNT EXCEEDS SAFE THRESHOLD!")
+                        logger.warning(f"\nWARNING: TOKEN COUNT EXCEEDS SAFE THRESHOLD!")
                         logger.warning(f"Reducing message history to prevent rate limit...\n")
                         
                         # Find system prompt (usually first)
                         system_msgs = [m for m in messages if isinstance(m, SystemMessage)]
                         other_msgs = [m for m in messages if not isinstance(m, SystemMessage)]
                         
-                        # Keep system + last 2 messages max
-                        reduced_messages = system_msgs + other_msgs[-2:]
+                        reduced_messages = system_msgs.copy()
+                        
+                        # Always keep the first human message (the initial objective)
+                        if other_msgs and isinstance(other_msgs[0], HumanMessage):
+                            reduced_messages.append(other_msgs[0])
+                            other_msgs = other_msgs[1:]
+                            
+                        # And keep the last two messages (typically tool thought + tool output)
+                        if len(other_msgs) > 2:
+                            reduced_messages.extend(other_msgs[-2:])
+                        else:
+                            reduced_messages.extend(other_msgs)
+                            
                         logger.info(f"Original messages: {len(messages)}, Reduced to: {len(reduced_messages)}")
                         messages = reduced_messages
                         
@@ -167,6 +179,27 @@ async def run_agent(user_input: str):
                         for msg in messages:
                             content = msg.content if isinstance(msg.content, str) else str(msg.content)
                             total_tokens += estimate_tokens(content)
+                            
+                        # If still over limit due to massive tool output, aggressively truncate the last message
+                        if total_tokens > safe_threshold and messages:
+                            last_msg = messages[-1]
+                            logger.warning(f"Still over threshold ({total_tokens} > {safe_threshold}). Truncating last message...")
+                            
+                            # Calculate roughly how many characters we need to chop
+                            # We'll just take a 4x multiplier of the safe threshold remaining
+                            other_tokens = sum(estimate_tokens(str(m.content)) for m in messages[:-1])
+                            remaining_tokens = max(1000, safe_threshold - other_tokens)
+                            allowed_chars = int(remaining_tokens * 3.5)  # conservative chars per token
+                            
+                            content_str = str(last_msg.content)
+                            if len(content_str) > allowed_chars:
+                                if hasattr(last_msg, 'content'):
+                                    last_msg.content = content_str[:allowed_chars] + "\n\n...[TRUNCATED DUE TO TOKEN LIMIT]..."
+                                elif isinstance(last_msg, dict) and 'content' in last_msg:
+                                    last_msg['content'] = content_str[:allowed_chars] + "\n\n...[TRUNCATED DUE TO TOKEN LIMIT]..."
+                                    
+                            total_tokens = sum(estimate_tokens(str(m.content)) for m in messages)
+                            
                         logger.info(f"Adjusted token count: {total_tokens}\n")
                     
                     logger.info("="*80)
@@ -180,6 +213,14 @@ async def run_agent(user_input: str):
                     logger.info("\n" + "="*80 + "\n")
                     
                     response = await llm.ainvoke(messages)
+                    
+                    # Log tool calls explicitly if they exist
+                    if hasattr(response, 'tool_calls') and response.tool_calls:
+                        logger.info("\n" + "!"*80)
+                        logger.info("LLM DECIDED TO USE TOOLS:")
+                        for tc in response.tool_calls:
+                            logger.info(f" - {tc['name']}({tc['args']})")
+                        logger.info("!"*80 + "\n")
                     
                     # Log token usage
                     if hasattr(response, 'response_metadata') and response.response_metadata:
@@ -213,7 +254,7 @@ async def run_agent(user_input: str):
                 system_prompt = (
                     "You are a powerful multi-database retail assistant. You have access to SQL Server (Inventory), "
                     "PostgreSQL (Sales), and MongoDB (Customers)."
-                    "\n\nCRITICAL: You must call 'get_database_info' FIRST to see the table structures, relationships, and sample data."
+                    "\n\nCRITICAL: You must call 'get_database_info' FIRST to see the table structures and relationships."
                     "\n\nCROSS-DATABASE CAPABILITIES:"
                     "\n- Join Sales (Postgres) to Customers (Mongo) using CustomerId mappings."
                     "\n- Join Inventory (SQL) to Sales (Postgres) using ProductId mappings."
@@ -245,6 +286,17 @@ async def run_agent(user_input: str):
                         logger.info("="*80)
                         logger.info(f"Input/Query: {json.dumps(tool_input, indent=2, default=str)}")
                         logger.info("="*80 + "\n")
+                        
+                        # Prominently print the actual LLM generated query
+                        actual_query = None
+                        if isinstance(tool_input, dict):
+                            actual_query = tool_input.get("sql_query") or tool_input.get("query_payload")
+                        
+                        if actual_query:
+                            header = f"ACTUAL LLM GENERATED QUERY ({tool_name})"
+                            print(f"\n\033[96m{'='*80}\n{header}\n{'-'*80}\n{actual_query}\n{'='*80}\033[0m\n")
+                            logger.info(f"\n{header}:\n{actual_query}\n")
+
                         yield {
                             "type": "tool_start", 
                             "tool": tool_name, 
