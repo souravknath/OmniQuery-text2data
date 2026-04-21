@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from mcp.server.fastmcp import FastMCP
 
-load_dotenv()
+# Load environment variables from 'env' file in the same directory
+env_file = os.path.join(os.path.dirname(__file__), "env")
+load_dotenv(env_file, override=True)
 
 # Initialize the MCP Server
 mcp = FastMCP("OmniQuery Retail & Sales Engine")
@@ -18,10 +20,17 @@ _mongo_client = None
 _metadata_cache = None
 
 def get_mongo_client():
-    """Lazy initialization of MongoDB client."""
+    """Lazy initialization of MongoDB client with error handling."""
     global _mongo_client
     if _mongo_client is None:
-        _mongo_client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"), serverSelectionTimeoutMS=5000)
+        try:
+            _mongo_client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"), serverSelectionTimeoutMS=5000)
+            # Test connection
+            _mongo_client.server_info()
+        except Exception as e:
+            # Return None on connection error; this will be handled gracefully in tools
+            _mongo_client = None
+            raise
     return _mongo_client
 
 def get_metadata():
@@ -61,14 +70,32 @@ def get_metadata():
 @mcp.tool()
 def get_database_info() -> str:
     """Returns the schema and relationships for all available databases (SQL, Postgres, Mongo). Call this FIRST to understand the data structure."""
-    metadata = get_metadata()
-    return json.dumps(metadata, indent=2, default=str)
+    try:
+        metadata = get_metadata()
+        return json.dumps(metadata, indent=2, default=str)
+    except Exception as e:
+        error_response = {
+            "error": f"Failed to fetch database metadata: {str(e)}",
+            "databases": {
+                "InventoryDB_SQL_Server": {"schema": {}, "relationships": []},
+                "SalesDB_PostgreSQL": {"schema": {}, "relationships": []},
+                "CustomerDB_MongoDB": {"schema": {}}
+            }
+        }
+        return json.dumps(error_response, indent=2, default=str)
 
 
 def execute_nosql(db_name: str, collection_name: str, query_type: str, query_payload: str):
-    print(f"--- [Mongo Query] Type: {query_type} | Collection: {collection_name} | Payload: {query_payload}", file=sys.stderr)
+    # Removed stderr print to prevent stdio corruption in MCP server
     try:
-        client = get_mongo_client()
+        try:
+            client = get_mongo_client()
+        except Exception as e:
+            return f"MongoDB Connection Error: {str(e)}"
+        
+        if client is None:
+            return "MongoDB Connection Error: Could not connect to MongoDB"
+            
         payload = json.loads(query_payload)
         db = client[db_name]
         collection = db[collection_name]
@@ -93,7 +120,6 @@ def query_customer_db(collection_name: str, query_payload: str, query_type: str 
 @mcp.tool()
 def query_inventory_db(sql_query: str) -> str:
     """Query SQL Server InventoryDB for products and stock. Use T-SQL and quote [keywords]."""
-    print(f"--- [SQL Server Query]: {sql_query}", file=sys.stderr)
     conn_str = os.getenv("SQL_DB_CONN") or r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
     conn = None
     try:
@@ -115,7 +141,6 @@ def query_inventory_db(sql_query: str) -> str:
 @mcp.tool()
 def query_sales_db(sql_query: str) -> str:
     """Query PostgreSQL SalesDB for orders and revenue. Use Standard SQL and quote \"keywords\"."""
-    print(f"--- [Postgres Query]: {sql_query}", file=sys.stderr)
     conn_str = os.getenv("PG_DB_CONN")
     conn = None
     try:
@@ -134,4 +159,11 @@ def query_sales_db(sql_query: str) -> str:
                 pass
 
 if __name__ == "__main__":
-    mcp.run()
+    import asyncio
+    try:
+        asyncio.run(mcp.run())
+    except Exception as e:
+        # Log any startup errors to a file instead of stderr
+        with open(os.path.join(os.path.dirname(__file__), "logs", "mcp_error.log"), "a") as f:
+            f.write(f"MCP Server Error: {e}\n")
+        raise

@@ -18,7 +18,9 @@ from mcp.client.stdio import stdio_client
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_groq import ChatGroq
 
-load_dotenv(override=True)
+# Load environment variables from 'env' file in the same directory
+env_file = os.path.join(os.path.dirname(__file__), "env")
+load_dotenv(env_file, override=True)
 
 # Configure logging - both console and file
 log_dir = os.path.join(os.path.dirname(__file__), "logs")

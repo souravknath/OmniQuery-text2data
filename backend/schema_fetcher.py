@@ -1,12 +1,23 @@
 import os
 import pyodbc
 import psycopg2
+from psycopg2.extras import RealDictCursor
 from pymongo import MongoClient
 import json
 import sys
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Setup logging instead of using sys.stderr
+log_dir = os.path.join(os.path.dirname(__file__), "logs")
+os.makedirs(log_dir, exist_ok=True)
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler(os.path.join(log_dir, "schema_fetcher.log"))
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
+logger.setLevel(logging.ERROR)
 
 def fetch_sql_server_metadata(conn_str):
     """Fetches schema, relationships, and samples from SQL Server."""
@@ -70,8 +81,8 @@ def fetch_sql_server_metadata(conn_str):
         conn.close()
         return {"schema": schema, "relationships": relationships, "samples": samples}
     except Exception as e:
-        # Use stderr for actual errors
-        sys.stderr.write(f"SQL Server Metadata Error: {e}\n")
+        # Use logger instead of stderr
+        logger.error(f"SQL Server Metadata Error: {e}")
         return {"schema": {}, "relationships": [], "samples": {}}
 
 def fetch_postgres_metadata(conn_str):
@@ -133,7 +144,7 @@ def fetch_postgres_metadata(conn_str):
         conn.close()
         return {"schema": schema, "relationships": relationships, "samples": samples}
     except Exception as e:
-        sys.stderr.write(f"Postgres Metadata Error: {e}\n")
+        logger.error(f"Postgres Metadata Error: {e}")
         return {"schema": {}, "relationships": [], "samples": {}}
 
 def fetch_mongo_metadata(mongo_uri, db_name):
@@ -167,5 +178,5 @@ def fetch_mongo_metadata(mongo_uri, db_name):
         client.close()
         return {"schema": schema, "samples": samples}
     except Exception as e:
-        sys.stderr.write(f"Mongo Metadata Error: {e}\n")
+        logger.error(f"Mongo Metadata Error: {e}")
         return {"schema": {}, "samples": {}}
