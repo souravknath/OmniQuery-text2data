@@ -9,7 +9,7 @@ import tiktoken
 from typing import TypedDict, Annotated, List
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
-from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage, ToolMessage
 from langgraph.graph import StateGraph, END, START
 from langgraph.prebuilt import ToolNode
 from langgraph.graph.message import add_messages
@@ -75,6 +75,51 @@ def should_continue(state: AgentState):
     if not last_message.tool_calls:
         return END
     return "tools"
+
+def extract_mapping_ids(results: list, id_fields: list = None) -> dict:
+    """Extract ID mappings from query results without the full data."""
+    if not results:
+        return {}
+    
+    if id_fields is None:
+        id_fields = ['ProductId', 'CustomerId', 'OrderId', 'product_id', 'customer_id', 'order_id']
+    
+    mappings = {}
+    for record in results:
+        if isinstance(record, dict):
+            for field in id_fields:
+                if field in record:
+                    if field not in mappings:
+                        mappings[field] = set()
+                    mappings[field].add(record[field])
+    
+    # Convert sets to lists for JSON serialization
+    return {k: list(v) for k, v in mappings.items()}
+
+def aggregate_cross_db_data(primary_results: list, related_data: dict) -> list:
+    """Aggregate results from multiple databases into enriched records."""
+    if not primary_results:
+        return []
+    
+    aggregated = []
+    for record in primary_results:
+        if not isinstance(record, dict):
+            aggregated.append(record)
+            continue
+            
+        enriched = record.copy()
+        
+        # Look for related data based on ID fields
+        for id_field, id_value in record.items():
+            if id_field in related_data and id_value in related_data[id_field]:
+                related_record = related_data[id_field][id_value]
+                # Merge related data with a namespace prefix to avoid conflicts
+                for key, val in related_record.items():
+                    enriched[f"{id_field}_{key}"] = val
+        
+        aggregated.append(enriched)
+    
+    return aggregated
 
 # --- 2. Main entry point (Async Generator for Streaming) ---
 async def run_agent(user_input: str):
@@ -211,7 +256,7 @@ async def run_agent(user_input: str):
                         msg_type = type(msg).__name__
                         content = msg.content if isinstance(msg.content, str) else str(msg.content)
                         logger.info(f"\n>>> MESSAGE {i} ({msg_type}):")
-                        logger.info(content)
+                       # logger.info(content)
                     logger.info("\n" + "="*80 + "\n")
                     
                     response = await llm.ainvoke(messages)
@@ -240,10 +285,156 @@ async def run_agent(user_input: str):
                     
                     return {"messages": [response]}
                 
-                # Build the Graph
+                # Build the Graph with optimized cross-database joining
                 workflow = StateGraph(AgentState)
                 workflow.add_node("agent", call_model)
-                workflow.add_node("tools", tool_node)
+                
+                # Create an optimized tool node with cross-database aggregation
+                async def optimized_tool_node(state: AgentState):
+                    """Execute tools and intelligently join data from multiple databases."""
+                    messages = state['messages']
+                    last_message = messages[-1]
+                    
+                    if not hasattr(last_message, 'tool_calls') or not last_message.tool_calls:
+                        return {"messages": []}
+                    
+                    # Execute ALL tools once (not in a loop)
+                    logger.info(f"\n{'='*80}")
+                    logger.info(f"EXECUTING {len(last_message.tool_calls)} TOOL(S)")
+                    logger.info(f"{'='*80}")
+                    
+                    try:
+                        all_tool_results = await tool_node.ainvoke({"messages": [last_message]})
+                        raw_results = all_tool_results.get("messages", [])
+                    except Exception as e:
+                        logger.error(f"Tool execution failed: {e}")
+                        return {"messages": []}
+                    
+                    tool_results = []
+                    
+                    # Now process each tool_call with cross-database joining
+                    for idx, tool_call in enumerate(last_message.tool_calls):
+                        tool_name = tool_call.get('name') or tool_call.get('type')
+                        tool_call_id = tool_call.get('id', tool_call.get('index', idx))
+                        
+                        # Get the corresponding result for this tool
+                        if idx >= len(raw_results):
+                            logger.warning(f"Missing result for tool {tool_name}")
+                            continue
+                        
+                        primary_result = raw_results[idx]
+                        
+                        logger.info(f"\nProcessing result from: {tool_name}")
+                        
+                        # Parse results if they're JSON strings
+                        parsed_results = primary_result
+                        if isinstance(primary_result, str):
+                            try:
+                                parsed_results = json.loads(primary_result)
+                                if not isinstance(parsed_results, list):
+                                    parsed_results = [parsed_results]
+                            except:
+                                parsed_results = [primary_result]
+                        elif isinstance(primary_result, dict):
+                            parsed_results = [primary_result]
+                        elif not isinstance(primary_result, list):
+                            parsed_results = [primary_result]
+                        
+                        # Extract mapping IDs
+                        mappings = extract_mapping_ids(parsed_results)
+                        logger.info(f"Extracted mappings: {json.dumps(mappings, indent=2)}")
+                        
+                        cross_db_cache = {}
+                        
+                        # Intelligently fetch related data based on the tool
+                        if tool_name == "query_sales_db" and mappings:
+                            logger.info("Initiating cross-database join for Sales data...")
+                            
+                            # Fetch related products if ProductIds exist
+                            product_ids = mappings.get('product_id', mappings.get('ProductId', []))
+                            if product_ids:
+                                product_query = f"SELECT * FROM [Products] WHERE [ProductId] IN ({','.join(map(str, product_ids[:10]))})"
+                                logger.info(f"Fetching product details for {len(product_ids)} products")
+                                
+                                try:
+                                    inv_result = await tool_node.ainvoke({
+                                        "messages": [type(last_message)(tool_calls=[{
+                                            'name': 'query_inventory_db',
+                                            'args': {'sql_query': product_query},
+                                            'id': 'related_inv_1'
+                                        }])]
+                                    })
+                                    if inv_result.get("messages"):
+                                        inv_data = inv_result["messages"][0]
+                                        try:
+                                            inv_parsed = json.loads(inv_data) if isinstance(inv_data, str) else inv_data
+                                            if isinstance(inv_parsed, dict) and 'error' not in inv_parsed:
+                                                cross_db_cache['products'] = inv_parsed if isinstance(inv_parsed, list) else [inv_parsed]
+                                                logger.info(f"Fetched {len(cross_db_cache['products'])} product records")
+                                        except:
+                                            pass
+                                except Exception as e:
+                                    logger.warning(f"Failed to fetch product details: {e}")
+                            
+                            # Fetch related customer data if CustomerIds exist
+                            customer_ids = mappings.get('customer_id', mappings.get('CustomerId', []))
+                            if customer_ids:
+                                customer_query = json.dumps({
+                                    "find": {"_id": {"$in": [str(cid) for cid in customer_ids[:10]]}},
+                                    "projection": {"_id": 0}
+                                })
+                                logger.info(f"Fetching customer details for {len(customer_ids)} customers")
+                                
+                                try:
+                                    cust_result = await tool_node.ainvoke({
+                                        "messages": [type(last_message)(tool_calls=[{
+                                            'name': 'query_customer_db',
+                                            'args': {
+                                                'collection_name': 'Customers',
+                                                'query_payload': customer_query,
+                                                'query_type': 'find'
+                                            },
+                                            'id': 'related_cust_1'
+                                        }])]
+                                    })
+                                    if cust_result.get("messages"):
+                                        cust_data = cust_result["messages"][0]
+                                        try:
+                                            cust_parsed = json.loads(cust_data) if isinstance(cust_data, str) else cust_data
+                                            if isinstance(cust_parsed, dict) and 'error' not in cust_parsed:
+                                                cross_db_cache['customers'] = cust_parsed if isinstance(cust_parsed, list) else [cust_parsed]
+                                                logger.info(f"Fetched {len(cross_db_cache['customers'])} customer records")
+                                        except:
+                                            pass
+                                except Exception as e:
+                                    logger.warning(f"Failed to fetch customer details: {e}")
+                        
+                        # Create aggregated result message
+                        aggregated_data = {
+                            "primary_source": tool_name,
+                            "primary_results": parsed_results,
+                            "mappings": mappings,
+                            "related_data": cross_db_cache,
+                            "record_count": len(parsed_results),
+                            "related_counts": {k: len(v) for k, v in cross_db_cache.items()}
+                        }
+                        
+                        logger.info(f"Aggregated result summary:")
+                        logger.info(f"  Primary records: {aggregated_data['record_count']}")
+                        logger.info(f"  Related data: {aggregated_data['related_counts']}")
+                        logger.info("="*80)
+                        
+                        # Create a message with aggregated data
+                        tool_message_content = json.dumps(aggregated_data, indent=2, default=str)
+                        
+                        tool_results.append(ToolMessage(
+                            content=tool_message_content,
+                            tool_call_id=tool_call_id
+                        ))
+                    
+                    return {"messages": tool_results}
+                
+                workflow.add_node("tools", optimized_tool_node)
 
                 workflow.add_edge(START, "agent")
                 workflow.add_conditional_edges("agent", should_continue, {"tools": "tools", END: END})
@@ -254,17 +445,28 @@ async def run_agent(user_input: str):
                 
                 # Execute graph with streaming events
                 system_prompt = (
-                    "You are a powerful multi-database retail assistant. You have access to SQL Server (Inventory), "
-                    "PostgreSQL (Sales), and MongoDB (Customers)."
-                    "\n\nCRITICAL: You must call 'get_database_info' FIRST to see the table structures and relationships."
-                    "\n\nCROSS-DATABASE CAPABILITIES:"
-                    "\n- Join Sales (Postgres) to Customers (Mongo) using CustomerId mappings."
-                    "\n- Join Inventory (SQL) to Sales (Postgres) using ProductId mappings."
-                    "\n\nGUIDELINES:"
-                    "\n1. ALWAYS inspect the schema via 'get_database_info' before writing any queries."
-                    "\n2. Present final merged results in a clean Markdown TABLE."
-                    "\n3. Handle reserved keywords by quoting: [SQL Server] or \"PostgreSQL\"."
+                    "You are a powerful multi-database retail assistant with intelligent cross-database joining.\n\n"
+                    "IMPORTANT: The system automatically fetches related data from multiple databases and provides you with:\n"
+                    "1. PRIMARY_RESULTS: The main query results (e.g., orders from Sales)\n"
+                    "2. MAPPINGS: Extracted IDs (ProductIds, CustomerIds, etc.)\n"
+                    "3. RELATED_DATA: Pre-fetched product/customer/inventory details linked to those IDs\n\n"
+                    "YOU DO NOT need to write complex joins. Instead:\n"
+                    "- Analyze the primary results and related data provided\n"
+                    "- Create clean, merged Markdown tables combining information from all sources\n"
+                    "- Show ProductNames (from Inventory), CustomerNames (from Customers), OrderDetails (from Sales)\n\n"
+                    "CRITICAL: You MUST call 'get_database_info' FIRST to understand table structures.\n\n"
+                    "DATABASE STRUCTURE:\n"
+                    "- SQL Server (InventoryDB): Products, Stores, Inventory\n"
+                    "- PostgreSQL (SalesDB): Orders, OrderItems, Customers (IDs only)\n"
+                    "- MongoDB (CustomerDB): Detailed customer profiles keyed by CustomerId\n\n"
+                    "EXAMPLE FLOW:\n"
+                    "- User: 'Get top 2 customers by order count'\n"
+                    "- You: Query SalesDB for top customers (gets OrderIds, ProductIds, CustomerIds)\n"
+                    "- System: Auto-fetches Product details + Customer details\n"
+                    "- You: Merge and display as clean table with customer names, products, order details\n\n"
+                    "ALWAYS present final results in clear Markdown tables.\n"
                 )
+
                 inputs = {
                     "messages": [
                         SystemMessage(content=system_prompt),
