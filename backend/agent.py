@@ -144,7 +144,7 @@ async def run_agent(user_input: str):
                 
                 # Configure LLM based on provider
                 provider = os.getenv("MODEL_PROVIDER", "groq").lower()
-                model_name = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
+                model_name = os.getenv("MODEL_NAME", "llama-3.1-8b-instant")
                 
                 if provider == "groq":
                     llm = ChatGroq(
