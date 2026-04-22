@@ -256,8 +256,8 @@ async def run_agent(user_input: str):
                         msg_type = type(msg).__name__
                         content = msg.content if isinstance(msg.content, str) else str(msg.content)
                         logger.info(f"\n>>> MESSAGE {i} ({msg_type}):")
-                       # logger.info(content)
-                    logger.info("\n" + "="*80 + "\n")
+                        logger.info(content)
+                        logger.info("\n" + "="*80 + "\n")
                     
                     response = await llm.ainvoke(messages)
                     
