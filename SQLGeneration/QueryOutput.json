@@ -1,282 +1,495 @@
 {
-    "Mongo_USA_Customers": {
-        "database": "Mongo_USA_Customers",
-        "db_type": "mongo",
-        "resolved_query": "{\"collection\": \"Customer_Address\", \"pipeline\": [{\"$match\": {\"Country\": \"USA\"}}, {\"$project\": {\"Customer_ID\": \"$Customer_ID\", \"_id\": 0}}]}",
-        "row_count": 118,
+    "SQL_Inventory_Product": {
+        "database": "SQL_Inventory_Product",
+        "db_type": "sqlserver",
+        "resolved_query": "SELECT Product_ID FROM Product WHERE Product_Name = 'Webcam HD';",
+        "row_count": 25,
         "results": [
             {
-                "Customer_ID": 1
+                "Product_ID": 1010
             },
             {
-                "Customer_ID": 2
+                "Product_ID": 1024
             },
             {
-                "Customer_ID": 3
+                "Product_ID": 1049
             },
             {
-                "Customer_ID": 4
+                "Product_ID": 1051
             },
             {
-                "Customer_ID": 5
+                "Product_ID": 1076
             },
             {
-                "Customer_ID": 5
+                "Product_ID": 1200
             },
             {
-                "Customer_ID": 6
+                "Product_ID": 1228
             },
             {
-                "Customer_ID": 6
+                "Product_ID": 1250
             },
             {
-                "Customer_ID": 7
+                "Product_ID": 1272
             },
             {
-                "Customer_ID": 8
+                "Product_ID": 1389
             },
             {
-                "Customer_ID": 9
+                "Product_ID": 1402
             },
             {
-                "Customer_ID": 10
+                "Product_ID": 1412
             },
             {
-                "Customer_ID": 10
+                "Product_ID": 1428
             },
             {
-                "Customer_ID": 11
+                "Product_ID": 1478
             },
             {
-                "Customer_ID": 12
+                "Product_ID": 1494
             },
+            {
+                "Product_ID": 1538
+            },
+            {
+                "Product_ID": 1551
+            },
+            {
+                "Product_ID": 1568
+            },
+            {
+                "Product_ID": 1624
+            },
+            {
+                "Product_ID": 1801
+            },
+            {
+                "Product_ID": 1850
+            },
+            {
+                "Product_ID": 1859
+            },
+            {
+                "Product_ID": 1941
+            },
+            {
+                "Product_ID": 1955
+            },
+            {
+                "Product_ID": 1983
+            }
+        ]
+    },
+    "Postgres_Order_Items": {
+        "database": "Postgres_Order_Items",
+        "db_type": "postgres",
+        "resolved_query": "SELECT DISTINCT order_id FROM order_items WHERE product_id IN (1010, 1024, 1049, 1051, 1076, 1200, 1228, 1250, 1272, 1389, 1402, 1412, 1428, 1478, 1494, 1538, 1551, 1568, 1624, 1801, 1850, 1859, 1941, 1955, 1983);",
+        "row_count": 61,
+        "results": [
+            {
+                "order_id": 625
+            },
+            {
+                "order_id": 485
+            },
+            {
+                "order_id": 617
+            },
+            {
+                "order_id": 294
+            },
+            {
+                "order_id": 636
+            },
+            {
+                "order_id": 52
+            },
+            {
+                "order_id": 201
+            },
+            {
+                "order_id": 511
+            },
+            {
+                "order_id": 402
+            },
+            {
+                "order_id": 554
+            },
+            {
+                "order_id": 666
+            },
+            {
+                "order_id": 542
+            },
+            {
+                "order_id": 514
+            },
+            {
+                "order_id": 387
+            },
+            {
+                "order_id": 364
+            },
+            {
+                "order_id": 213
+            },
+            {
+                "order_id": 670
+            },
+            {
+                "order_id": 169
+            },
+            {
+                "order_id": 669
+            },
+            {
+                "order_id": 393
+            },
+            {
+                "order_id": 723
+            },
+            {
+                "order_id": 102
+            },
+            {
+                "order_id": 158
+            },
+            {
+                "order_id": 277
+            },
+            {
+                "order_id": 737
+            },
+            {
+                "order_id": 689
+            },
+            {
+                "order_id": 569
+            },
+            {
+                "order_id": 665
+            },
+            {
+                "order_id": 693
+            },
+            {
+                "order_id": 128
+            },
+            {
+                "order_id": 600
+            },
+            {
+                "order_id": 371
+            },
+            {
+                "order_id": 374
+            },
+            {
+                "order_id": 637
+            },
+            {
+                "order_id": 240
+            },
+            {
+                "order_id": 739
+            },
+            {
+                "order_id": 153
+            },
+            {
+                "order_id": 586
+            },
+            {
+                "order_id": 279
+            },
+            {
+                "order_id": 260
+            },
+            {
+                "order_id": 647
+            },
+            {
+                "order_id": 442
+            },
+            {
+                "order_id": 254
+            },
+            {
+                "order_id": 592
+            },
+            {
+                "order_id": 421
+            },
+            {
+                "order_id": 281
+            },
+            {
+                "order_id": 78
+            },
+            {
+                "order_id": 392
+            },
+            {
+                "order_id": 642
+            },
+            {
+                "order_id": 217
+            },
+            {
+                "order_id": 425
+            },
+            {
+                "order_id": 570
+            },
+            {
+                "order_id": 721
+            },
+            {
+                "order_id": 76
+            },
+            {
+                "order_id": 549
+            },
+            {
+                "order_id": 104
+            },
+            {
+                "order_id": 746
+            },
+            {
+                "order_id": 264
+            },
+            {
+                "order_id": 366
+            },
+            {
+                "order_id": 486
+            },
+            {
+                "order_id": 56
+            }
+        ]
+    },
+    "Postgres_Orders_Filtered": {
+        "database": "Postgres_Orders_Filtered",
+        "db_type": "postgres",
+        "resolved_query": "SELECT customer_id, SUM(order_amount) AS total_amount FROM \"Order\" WHERE order_id IN (625, 485, 617, 294, 636, 52, 201, 511, 402, 554, 666, 542, 514, 387, 364, 213, 670, 169, 669, 393, 723, 102, 158, 277, 737, 689, 569, 665, 693, 128, 600, 371, 374, 637, 240, 739, 153, 586, 279, 260, 647, 442, 254, 592, 421, 281, 78, 392, 642, 217, 425, 570, 721, 76, 549, 104, 746, 264, 366, 486, 56) GROUP BY customer_id;",
+        "row_count": 45,
+        "results": [
+            {
+                "customer_id": 99,
+                "total_amount": "36295.83"
+            },
+            {
+                "customer_id": 54,
+                "total_amount": "103218.00"
+            },
+            {
+                "customer_id": 88,
+                "total_amount": "41974.10"
+            },
+            {
+                "customer_id": 82,
+                "total_amount": "1035.85"
+            },
+            {
+                "customer_id": 34,
+                "total_amount": "69831.92"
+            },
+            {
+                "customer_id": 51,
+                "total_amount": "62795.46"
+            },
+            {
+                "customer_id": 96,
+                "total_amount": "54907.43"
+            },
+            {
+                "customer_id": 80,
+                "total_amount": "35952.85"
+            },
+            {
+                "customer_id": 52,
+                "total_amount": "24768.93"
+            },
+            {
+                "customer_id": 83,
+                "total_amount": "44301.44"
+            },
+            {
+                "customer_id": 67,
+                "total_amount": "109356.21"
+            },
+            {
+                "customer_id": 32,
+                "total_amount": "122766.48"
+            },
+            {
+                "customer_id": 63,
+                "total_amount": "99838.31"
+            },
+            {
+                "customer_id": 10,
+                "total_amount": "58990.61"
+            },
+            {
+                "customer_id": 7,
+                "total_amount": "154346.13"
+            },
+            {
+                "customer_id": 35,
+                "total_amount": "50010.57"
+            },
+            {
+                "customer_id": 38,
+                "total_amount": "42433.53"
+            },
+            {
+                "customer_id": 79,
+                "total_amount": "57763.50"
+            },
+            {
+                "customer_id": 86,
+                "total_amount": "98048.12"
+            },
+            {
+                "customer_id": 48,
+                "total_amount": "47487.83"
+            },
+            {
+                "customer_id": 26,
+                "total_amount": "61242.18"
+            },
+            {
+                "customer_id": 85,
+                "total_amount": "80935.05"
+            },
+            {
+                "customer_id": 72,
+                "total_amount": "45351.34"
+            },
+            {
+                "customer_id": 95,
+                "total_amount": "38003.95"
+            },
+            {
+                "customer_id": 78,
+                "total_amount": "78372.20"
+            },
+            {
+                "customer_id": 57,
+                "total_amount": "71189.56"
+            },
+            {
+                "customer_id": 92,
+                "total_amount": "56213.93"
+            },
+            {
+                "customer_id": 89,
+                "total_amount": "163529.02"
+            },
+            {
+                "customer_id": 36,
+                "total_amount": "170468.48"
+            },
+            {
+                "customer_id": 50,
+                "total_amount": "131487.25"
+            },
+            {
+                "customer_id": 21,
+                "total_amount": "116709.76"
+            },
+            {
+                "customer_id": 47,
+                "total_amount": "110389.99"
+            },
+            {
+                "customer_id": 14,
+                "total_amount": "88676.02"
+            },
+            {
+                "customer_id": 37,
+                "total_amount": "80363.95"
+            },
+            {
+                "customer_id": 28,
+                "total_amount": "91529.67"
+            },
+            {
+                "customer_id": 33,
+                "total_amount": "93373.49"
+            },
+            {
+                "customer_id": 76,
+                "total_amount": "125513.71"
+            },
+            {
+                "customer_id": 18,
+                "total_amount": "91033.63"
+            },
+            {
+                "customer_id": 64,
+                "total_amount": "54052.66"
+            },
+            {
+                "customer_id": 55,
+                "total_amount": "76723.32"
+            },
+            {
+                "customer_id": 98,
+                "total_amount": "78914.66"
+            },
+            {
+                "customer_id": 23,
+                "total_amount": "21096.50"
+            },
+            {
+                "customer_id": 91,
+                "total_amount": "62390.13"
+            },
+            {
+                "customer_id": 73,
+                "total_amount": "78529.87"
+            },
+            {
+                "customer_id": 11,
+                "total_amount": "108510.80"
+            }
+        ]
+    },
+    "Mongo_Customer_Address_Phoenix": {
+        "database": "Mongo_Customer_Address_Phoenix",
+        "db_type": "mongo",
+        "resolved_query": "{\"collection\": \"Customer_Address\", \"pipeline\": [{\"$match\": {\"City\": \"Phoenix\"}}, {\"$project\": {\"Customer_ID\": \"$Customer_ID\", \"_id\": 0}}]}",
+        "row_count": 11,
+        "results": [
             {
                 "Customer_ID": 13
-            },
-            {
-                "Customer_ID": 14
-            },
-            {
-                "Customer_ID": 15
-            },
-            {
-                "Customer_ID": 16
-            },
-            {
-                "Customer_ID": 17
-            },
-            {
-                "Customer_ID": 18
-            },
-            {
-                "Customer_ID": 19
-            },
-            {
-                "Customer_ID": 20
-            },
-            {
-                "Customer_ID": 20
-            },
-            {
-                "Customer_ID": 21
-            },
-            {
-                "Customer_ID": 22
-            },
-            {
-                "Customer_ID": 22
             },
             {
                 "Customer_ID": 23
             },
             {
-                "Customer_ID": 24
-            },
-            {
-                "Customer_ID": 24
-            },
-            {
-                "Customer_ID": 25
-            },
-            {
                 "Customer_ID": 26
-            },
-            {
-                "Customer_ID": 26
-            },
-            {
-                "Customer_ID": 27
-            },
-            {
-                "Customer_ID": 28
-            },
-            {
-                "Customer_ID": 29
-            },
-            {
-                "Customer_ID": 30
-            },
-            {
-                "Customer_ID": 31
-            },
-            {
-                "Customer_ID": 32
-            },
-            {
-                "Customer_ID": 32
-            },
-            {
-                "Customer_ID": 33
-            },
-            {
-                "Customer_ID": 33
-            },
-            {
-                "Customer_ID": 34
-            },
-            {
-                "Customer_ID": 34
             },
             {
                 "Customer_ID": 35
             },
             {
-                "Customer_ID": 36
-            },
-            {
-                "Customer_ID": 37
-            },
-            {
-                "Customer_ID": 37
-            },
-            {
-                "Customer_ID": 38
-            },
-            {
-                "Customer_ID": 39
-            },
-            {
-                "Customer_ID": 40
-            },
-            {
-                "Customer_ID": 41
-            },
-            {
-                "Customer_ID": 42
-            },
-            {
-                "Customer_ID": 43
-            },
-            {
-                "Customer_ID": 44
-            },
-            {
-                "Customer_ID": 45
-            },
-            {
-                "Customer_ID": 46
-            },
-            {
-                "Customer_ID": 47
-            },
-            {
-                "Customer_ID": 48
-            },
-            {
-                "Customer_ID": 49
-            },
-            {
-                "Customer_ID": 50
-            },
-            {
-                "Customer_ID": 51
-            },
-            {
-                "Customer_ID": 52
-            },
-            {
-                "Customer_ID": 53
-            },
-            {
-                "Customer_ID": 54
-            },
-            {
-                "Customer_ID": 55
-            },
-            {
-                "Customer_ID": 56
-            },
-            {
                 "Customer_ID": 57
-            },
-            {
-                "Customer_ID": 58
-            },
-            {
-                "Customer_ID": 59
-            },
-            {
-                "Customer_ID": 60
-            },
-            {
-                "Customer_ID": 61
-            },
-            {
-                "Customer_ID": 61
             },
             {
                 "Customer_ID": 62
             },
             {
-                "Customer_ID": 63
-            },
-            {
-                "Customer_ID": 64
-            },
-            {
                 "Customer_ID": 65
             },
             {
-                "Customer_ID": 66
-            },
-            {
-                "Customer_ID": 67
-            },
-            {
-                "Customer_ID": 68
-            },
-            {
                 "Customer_ID": 69
-            },
-            {
-                "Customer_ID": 70
-            },
-            {
-                "Customer_ID": 71
-            },
-            {
-                "Customer_ID": 72
-            },
-            {
-                "Customer_ID": 72
-            },
-            {
-                "Customer_ID": 73
-            },
-            {
-                "Customer_ID": 74
-            },
-            {
-                "Customer_ID": 75
-            },
-            {
-                "Customer_ID": 76
-            },
-            {
-                "Customer_ID": 77
-            },
-            {
-                "Customer_ID": 77
             },
             {
                 "Customer_ID": 78
@@ -285,94 +498,1640 @@
                 "Customer_ID": 79
             },
             {
-                "Customer_ID": 80
-            },
-            {
-                "Customer_ID": 81
-            },
-            {
-                "Customer_ID": 81
-            },
-            {
-                "Customer_ID": 82
-            },
-            {
                 "Customer_ID": 83
-            },
-            {
-                "Customer_ID": 84
-            },
-            {
-                "Customer_ID": 85
-            },
-            {
-                "Customer_ID": 86
-            },
-            {
-                "Customer_ID": 87
-            },
-            {
-                "Customer_ID": 88
-            },
-            {
-                "Customer_ID": 88
-            },
-            {
-                "Customer_ID": 89
-            },
-            {
-                "Customer_ID": 90
-            },
-            {
-                "Customer_ID": 91
-            },
-            {
-                "Customer_ID": 92
-            },
-            {
-                "Customer_ID": 93
-            },
-            {
-                "Customer_ID": 94
-            },
-            {
-                "Customer_ID": 95
-            },
-            {
-                "Customer_ID": 96
-            },
-            {
-                "Customer_ID": 96
-            },
-            {
-                "Customer_ID": 97
-            },
-            {
-                "Customer_ID": 98
-            },
-            {
-                "Customer_ID": 99
-            },
-            {
-                "Customer_ID": 99
-            },
-            {
-                "Customer_ID": 100
             }
         ]
     },
-    "SQL_Product_ID": {
-        "database": "SQL_Product_ID",
-        "db_type": "postgres",
-        "resolved_query": "SELECT Product_ID FROM Product WHERE Product_Name = 'Webcam HD';",
-        "row_count": 0,
-        "results": []
-    },
-    "Postgres_Customer_Total": {
-        "database": "Postgres_Customer_Total",
-        "db_type": "postgres",
-        "resolved_query": "SELECT o.customer_id AS Customer_ID, SUM(o.order_amount) AS Total_Order_Amount FROM \"Order\" o JOIN order_items oi ON o.order_id = oi.order_id WHERE oi.product_id = {SQL_Inventory_DB.Product_ID} GROUP BY o.customer_id;",
-        "row_count": 0,
-        "results": []
+    "Mongo_Customer_Names": {
+        "database": "Mongo_Customer_Names",
+        "db_type": "mongo",
+        "resolved_query": "{\"collection\": \"Customer\", \"pipeline\": [{\"$match\": {\"Customer_ID\": {\"$in\": 13, 23, 26, 35, 57, 62, 65, 69, 78, 79, 83}}}, {\"$project\": {\"Customer_ID\": \"$Customer_ID\", \"First_Name\": \"$First_Name\", \"Last_Name\": \"$Last_Name\", \"_id\": 0}}]}",
+        "row_count": 203,
+        "results": [
+            {
+                "Customer_Wish_List_Item_ID": 1,
+                "Customer_Wish_List_ID": 1,
+                "Product_ID": 877,
+                "Product_Price": "101.0",
+                "Created_Date": "2026-04-23 16:16:18.541000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 2,
+                "Customer_Wish_List_ID": 1,
+                "Product_ID": 678,
+                "Product_Price": "439.47",
+                "Created_Date": "2026-04-23 16:16:18.541000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 3,
+                "Customer_Wish_List_ID": 1,
+                "Product_ID": 274,
+                "Product_Price": "265.13",
+                "Created_Date": "2026-04-23 16:16:18.541000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 4,
+                "Customer_Wish_List_ID": 2,
+                "Product_ID": 174,
+                "Product_Price": "286.06",
+                "Created_Date": "2026-04-23 16:16:18.541000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 5,
+                "Customer_Wish_List_ID": 2,
+                "Product_ID": 270,
+                "Product_Price": "440.64",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 6,
+                "Customer_Wish_List_ID": 3,
+                "Product_ID": 517,
+                "Product_Price": "81.37",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 7,
+                "Customer_Wish_List_ID": 3,
+                "Product_ID": 642,
+                "Product_Price": "181.94",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 8,
+                "Customer_Wish_List_ID": 4,
+                "Product_ID": 186,
+                "Product_Price": "264.05",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 9,
+                "Customer_Wish_List_ID": 4,
+                "Product_ID": 653,
+                "Product_Price": "62.74",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 10,
+                "Customer_Wish_List_ID": 5,
+                "Product_ID": 553,
+                "Product_Price": "35.8",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 11,
+                "Customer_Wish_List_ID": 6,
+                "Product_ID": 281,
+                "Product_Price": "229.64",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 12,
+                "Customer_Wish_List_ID": 6,
+                "Product_ID": 802,
+                "Product_Price": "276.47",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 13,
+                "Customer_Wish_List_ID": 7,
+                "Product_ID": 335,
+                "Product_Price": "31.19",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 14,
+                "Customer_Wish_List_ID": 7,
+                "Product_ID": 682,
+                "Product_Price": "311.6",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 15,
+                "Customer_Wish_List_ID": 7,
+                "Product_ID": 308,
+                "Product_Price": "81.63",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 16,
+                "Customer_Wish_List_ID": 8,
+                "Product_ID": 315,
+                "Product_Price": "330.64",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 17,
+                "Customer_Wish_List_ID": 8,
+                "Product_ID": 968,
+                "Product_Price": "204.85",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 18,
+                "Customer_Wish_List_ID": 8,
+                "Product_ID": 699,
+                "Product_Price": "293.78",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 19,
+                "Customer_Wish_List_ID": 9,
+                "Product_ID": 843,
+                "Product_Price": "174.71",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 20,
+                "Customer_Wish_List_ID": 10,
+                "Product_ID": 765,
+                "Product_Price": "168.9",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 21,
+                "Customer_Wish_List_ID": 10,
+                "Product_ID": 517,
+                "Product_Price": "483.01",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 22,
+                "Customer_Wish_List_ID": 10,
+                "Product_ID": 632,
+                "Product_Price": "118.12",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 23,
+                "Customer_Wish_List_ID": 11,
+                "Product_ID": 611,
+                "Product_Price": "338.83",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 24,
+                "Customer_Wish_List_ID": 11,
+                "Product_ID": 596,
+                "Product_Price": "396.5",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 25,
+                "Customer_Wish_List_ID": 12,
+                "Product_ID": 638,
+                "Product_Price": "100.05",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 26,
+                "Customer_Wish_List_ID": 13,
+                "Product_ID": 824,
+                "Product_Price": "212.18",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 27,
+                "Customer_Wish_List_ID": 14,
+                "Product_ID": 100,
+                "Product_Price": "251.82",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 28,
+                "Customer_Wish_List_ID": 15,
+                "Product_ID": 443,
+                "Product_Price": "274.11",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 29,
+                "Customer_Wish_List_ID": 15,
+                "Product_ID": 767,
+                "Product_Price": "90.36",
+                "Created_Date": "2026-04-23 16:16:18.542000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 30,
+                "Customer_Wish_List_ID": 16,
+                "Product_ID": 713,
+                "Product_Price": "307.93",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 31,
+                "Customer_Wish_List_ID": 16,
+                "Product_ID": 570,
+                "Product_Price": "440.72",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 32,
+                "Customer_Wish_List_ID": 17,
+                "Product_ID": 337,
+                "Product_Price": "475.99",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 33,
+                "Customer_Wish_List_ID": 17,
+                "Product_ID": 680,
+                "Product_Price": "301.85",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 34,
+                "Customer_Wish_List_ID": 17,
+                "Product_ID": 934,
+                "Product_Price": "103.72",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 35,
+                "Customer_Wish_List_ID": 18,
+                "Product_ID": 694,
+                "Product_Price": "338.39",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 36,
+                "Customer_Wish_List_ID": 18,
+                "Product_ID": 784,
+                "Product_Price": "138.23",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 37,
+                "Customer_Wish_List_ID": 19,
+                "Product_ID": 151,
+                "Product_Price": "291.12",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 38,
+                "Customer_Wish_List_ID": 19,
+                "Product_ID": 898,
+                "Product_Price": "445.84",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 39,
+                "Customer_Wish_List_ID": 20,
+                "Product_ID": 299,
+                "Product_Price": "224.88",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 40,
+                "Customer_Wish_List_ID": 20,
+                "Product_ID": 890,
+                "Product_Price": "145.91",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 41,
+                "Customer_Wish_List_ID": 20,
+                "Product_ID": 685,
+                "Product_Price": "469.01",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 42,
+                "Customer_Wish_List_ID": 21,
+                "Product_ID": 829,
+                "Product_Price": "191.28",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 43,
+                "Customer_Wish_List_ID": 22,
+                "Product_ID": 496,
+                "Product_Price": "463.28",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 44,
+                "Customer_Wish_List_ID": 22,
+                "Product_ID": 853,
+                "Product_Price": "26.99",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 45,
+                "Customer_Wish_List_ID": 22,
+                "Product_ID": 466,
+                "Product_Price": "374.41",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 46,
+                "Customer_Wish_List_ID": 23,
+                "Product_ID": 432,
+                "Product_Price": "415.48",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 47,
+                "Customer_Wish_List_ID": 23,
+                "Product_ID": 708,
+                "Product_Price": "150.85",
+                "Created_Date": "2026-04-23 16:16:18.543000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 48,
+                "Customer_Wish_List_ID": 24,
+                "Product_ID": 943,
+                "Product_Price": "339.46",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 49,
+                "Customer_Wish_List_ID": 24,
+                "Product_ID": 437,
+                "Product_Price": "136.74",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 50,
+                "Customer_Wish_List_ID": 25,
+                "Product_ID": 544,
+                "Product_Price": "330.92",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 51,
+                "Customer_Wish_List_ID": 25,
+                "Product_ID": 264,
+                "Product_Price": "180.18",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 52,
+                "Customer_Wish_List_ID": 26,
+                "Product_ID": 974,
+                "Product_Price": "474.01",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 53,
+                "Customer_Wish_List_ID": 26,
+                "Product_ID": 687,
+                "Product_Price": "353.99",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 54,
+                "Customer_Wish_List_ID": 27,
+                "Product_ID": 347,
+                "Product_Price": "144.59",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 55,
+                "Customer_Wish_List_ID": 28,
+                "Product_ID": 248,
+                "Product_Price": "406.34",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 56,
+                "Customer_Wish_List_ID": 28,
+                "Product_ID": 932,
+                "Product_Price": "453.45",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 57,
+                "Customer_Wish_List_ID": 29,
+                "Product_ID": 419,
+                "Product_Price": "106.82",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 58,
+                "Customer_Wish_List_ID": 29,
+                "Product_ID": 328,
+                "Product_Price": "426.9",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 59,
+                "Customer_Wish_List_ID": 29,
+                "Product_ID": 928,
+                "Product_Price": "384.9",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 60,
+                "Customer_Wish_List_ID": 30,
+                "Product_ID": 566,
+                "Product_Price": "265.71",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 61,
+                "Customer_Wish_List_ID": 30,
+                "Product_ID": 192,
+                "Product_Price": "468.91",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 62,
+                "Customer_Wish_List_ID": 30,
+                "Product_ID": 157,
+                "Product_Price": "33.44",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 63,
+                "Customer_Wish_List_ID": 31,
+                "Product_ID": 905,
+                "Product_Price": "412.39",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 64,
+                "Customer_Wish_List_ID": 32,
+                "Product_ID": 747,
+                "Product_Price": "183.23",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 65,
+                "Customer_Wish_List_ID": 32,
+                "Product_ID": 317,
+                "Product_Price": "148.38",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 66,
+                "Customer_Wish_List_ID": 32,
+                "Product_ID": 918,
+                "Product_Price": "23.06",
+                "Created_Date": "2026-04-23 16:16:18.544000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 67,
+                "Customer_Wish_List_ID": 33,
+                "Product_ID": 734,
+                "Product_Price": "441.96",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 68,
+                "Customer_Wish_List_ID": 33,
+                "Product_ID": 652,
+                "Product_Price": "84.22",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 69,
+                "Customer_Wish_List_ID": 33,
+                "Product_ID": 959,
+                "Product_Price": "270.75",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 70,
+                "Customer_Wish_List_ID": 34,
+                "Product_ID": 566,
+                "Product_Price": "430.2",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 71,
+                "Customer_Wish_List_ID": 34,
+                "Product_ID": 373,
+                "Product_Price": "318.83",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 72,
+                "Customer_Wish_List_ID": 35,
+                "Product_ID": 879,
+                "Product_Price": "162.39",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 73,
+                "Customer_Wish_List_ID": 35,
+                "Product_ID": 875,
+                "Product_Price": "493.94",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 74,
+                "Customer_Wish_List_ID": 35,
+                "Product_ID": 866,
+                "Product_Price": "261.26",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 75,
+                "Customer_Wish_List_ID": 36,
+                "Product_ID": 299,
+                "Product_Price": "28.4",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 76,
+                "Customer_Wish_List_ID": 37,
+                "Product_ID": 485,
+                "Product_Price": "153.71",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 77,
+                "Customer_Wish_List_ID": 38,
+                "Product_ID": 828,
+                "Product_Price": "189.53",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 78,
+                "Customer_Wish_List_ID": 38,
+                "Product_ID": 602,
+                "Product_Price": "345.48",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 79,
+                "Customer_Wish_List_ID": 39,
+                "Product_ID": 282,
+                "Product_Price": "482.47",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 80,
+                "Customer_Wish_List_ID": 39,
+                "Product_ID": 747,
+                "Product_Price": "189.55",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 81,
+                "Customer_Wish_List_ID": 40,
+                "Product_ID": 704,
+                "Product_Price": "410.64",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 82,
+                "Customer_Wish_List_ID": 41,
+                "Product_ID": 934,
+                "Product_Price": "405.86",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 83,
+                "Customer_Wish_List_ID": 41,
+                "Product_ID": 333,
+                "Product_Price": "427.16",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 84,
+                "Customer_Wish_List_ID": 42,
+                "Product_ID": 472,
+                "Product_Price": "97.7",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 85,
+                "Customer_Wish_List_ID": 42,
+                "Product_ID": 850,
+                "Product_Price": "261.72",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 86,
+                "Customer_Wish_List_ID": 42,
+                "Product_ID": 463,
+                "Product_Price": "189.27",
+                "Created_Date": "2026-04-23 16:16:18.545000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 87,
+                "Customer_Wish_List_ID": 43,
+                "Product_ID": 804,
+                "Product_Price": "16.81",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 88,
+                "Customer_Wish_List_ID": 43,
+                "Product_ID": 125,
+                "Product_Price": "198.04",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 89,
+                "Customer_Wish_List_ID": 44,
+                "Product_ID": 236,
+                "Product_Price": "71.56",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 90,
+                "Customer_Wish_List_ID": 44,
+                "Product_ID": 690,
+                "Product_Price": "191.84",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 91,
+                "Customer_Wish_List_ID": 44,
+                "Product_ID": 404,
+                "Product_Price": "336.73",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 92,
+                "Customer_Wish_List_ID": 45,
+                "Product_ID": 570,
+                "Product_Price": "425.42",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 93,
+                "Customer_Wish_List_ID": 45,
+                "Product_ID": 265,
+                "Product_Price": "119.42",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 94,
+                "Customer_Wish_List_ID": 45,
+                "Product_ID": 490,
+                "Product_Price": "215.0",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 95,
+                "Customer_Wish_List_ID": 46,
+                "Product_ID": 773,
+                "Product_Price": "291.46",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 96,
+                "Customer_Wish_List_ID": 46,
+                "Product_ID": 898,
+                "Product_Price": "371.96",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 97,
+                "Customer_Wish_List_ID": 47,
+                "Product_ID": 337,
+                "Product_Price": "27.86",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 98,
+                "Customer_Wish_List_ID": 47,
+                "Product_ID": 904,
+                "Product_Price": "215.92",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 99,
+                "Customer_Wish_List_ID": 47,
+                "Product_ID": 621,
+                "Product_Price": "293.52",
+                "Created_Date": "2026-04-23 16:16:18.546000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 100,
+                "Customer_Wish_List_ID": 48,
+                "Product_ID": 337,
+                "Product_Price": "460.84",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 101,
+                "Customer_Wish_List_ID": 48,
+                "Product_ID": 362,
+                "Product_Price": "342.34",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 102,
+                "Customer_Wish_List_ID": 48,
+                "Product_ID": 509,
+                "Product_Price": "74.12",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 103,
+                "Customer_Wish_List_ID": 49,
+                "Product_ID": 244,
+                "Product_Price": "219.41",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 104,
+                "Customer_Wish_List_ID": 49,
+                "Product_ID": 559,
+                "Product_Price": "395.98",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 105,
+                "Customer_Wish_List_ID": 49,
+                "Product_ID": 143,
+                "Product_Price": "182.09",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 106,
+                "Customer_Wish_List_ID": 50,
+                "Product_ID": 567,
+                "Product_Price": "179.75",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 107,
+                "Customer_Wish_List_ID": 50,
+                "Product_ID": 413,
+                "Product_Price": "49.24",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 108,
+                "Customer_Wish_List_ID": 51,
+                "Product_ID": 504,
+                "Product_Price": "467.18",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 109,
+                "Customer_Wish_List_ID": 51,
+                "Product_ID": 824,
+                "Product_Price": "408.86",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 110,
+                "Customer_Wish_List_ID": 51,
+                "Product_ID": 965,
+                "Product_Price": "182.37",
+                "Created_Date": "2026-04-23 16:16:18.547000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 111,
+                "Customer_Wish_List_ID": 52,
+                "Product_ID": 741,
+                "Product_Price": "108.27",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 112,
+                "Customer_Wish_List_ID": 53,
+                "Product_ID": 525,
+                "Product_Price": "375.09",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 113,
+                "Customer_Wish_List_ID": 53,
+                "Product_ID": 934,
+                "Product_Price": "494.74",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 114,
+                "Customer_Wish_List_ID": 53,
+                "Product_ID": 947,
+                "Product_Price": "469.8",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 115,
+                "Customer_Wish_List_ID": 54,
+                "Product_ID": 536,
+                "Product_Price": "334.62",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 116,
+                "Customer_Wish_List_ID": 55,
+                "Product_ID": 972,
+                "Product_Price": "298.45",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 117,
+                "Customer_Wish_List_ID": 55,
+                "Product_ID": 359,
+                "Product_Price": "23.1",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 118,
+                "Customer_Wish_List_ID": 56,
+                "Product_ID": 248,
+                "Product_Price": "252.29",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 119,
+                "Customer_Wish_List_ID": 56,
+                "Product_ID": 806,
+                "Product_Price": "350.08",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 120,
+                "Customer_Wish_List_ID": 56,
+                "Product_ID": 250,
+                "Product_Price": "223.38",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 121,
+                "Customer_Wish_List_ID": 57,
+                "Product_ID": 626,
+                "Product_Price": "420.35",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 122,
+                "Customer_Wish_List_ID": 57,
+                "Product_ID": 537,
+                "Product_Price": "46.68",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 123,
+                "Customer_Wish_List_ID": 57,
+                "Product_ID": 157,
+                "Product_Price": "219.7",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 124,
+                "Customer_Wish_List_ID": 58,
+                "Product_ID": 436,
+                "Product_Price": "118.77",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 125,
+                "Customer_Wish_List_ID": 58,
+                "Product_ID": 277,
+                "Product_Price": "353.53",
+                "Created_Date": "2026-04-23 16:16:18.548000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 126,
+                "Customer_Wish_List_ID": 59,
+                "Product_ID": 961,
+                "Product_Price": "459.88",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 127,
+                "Customer_Wish_List_ID": 59,
+                "Product_ID": 942,
+                "Product_Price": "257.99",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 128,
+                "Customer_Wish_List_ID": 59,
+                "Product_ID": 586,
+                "Product_Price": "169.25",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 129,
+                "Customer_Wish_List_ID": 60,
+                "Product_ID": 330,
+                "Product_Price": "41.35",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 130,
+                "Customer_Wish_List_ID": 60,
+                "Product_ID": 819,
+                "Product_Price": "52.51",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 131,
+                "Customer_Wish_List_ID": 60,
+                "Product_ID": 560,
+                "Product_Price": "158.68",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 132,
+                "Customer_Wish_List_ID": 61,
+                "Product_ID": 306,
+                "Product_Price": "497.53",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 133,
+                "Customer_Wish_List_ID": 61,
+                "Product_ID": 502,
+                "Product_Price": "249.71",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 134,
+                "Customer_Wish_List_ID": 61,
+                "Product_ID": 753,
+                "Product_Price": "157.95",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 135,
+                "Customer_Wish_List_ID": 62,
+                "Product_ID": 577,
+                "Product_Price": "149.7",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 136,
+                "Customer_Wish_List_ID": 62,
+                "Product_ID": 978,
+                "Product_Price": "226.23",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 137,
+                "Customer_Wish_List_ID": 63,
+                "Product_ID": 513,
+                "Product_Price": "219.22",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 138,
+                "Customer_Wish_List_ID": 63,
+                "Product_ID": 994,
+                "Product_Price": "77.96",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 139,
+                "Customer_Wish_List_ID": 63,
+                "Product_ID": 964,
+                "Product_Price": "178.05",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 140,
+                "Customer_Wish_List_ID": 64,
+                "Product_ID": 575,
+                "Product_Price": "62.09",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 141,
+                "Customer_Wish_List_ID": 65,
+                "Product_ID": 493,
+                "Product_Price": "335.87",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 142,
+                "Customer_Wish_List_ID": 66,
+                "Product_ID": 875,
+                "Product_Price": "438.42",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 143,
+                "Customer_Wish_List_ID": 66,
+                "Product_ID": 929,
+                "Product_Price": "123.52",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 144,
+                "Customer_Wish_List_ID": 66,
+                "Product_ID": 134,
+                "Product_Price": "261.07",
+                "Created_Date": "2026-04-23 16:16:18.549000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 145,
+                "Customer_Wish_List_ID": 67,
+                "Product_ID": 728,
+                "Product_Price": "426.5",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 146,
+                "Customer_Wish_List_ID": 68,
+                "Product_ID": 958,
+                "Product_Price": "448.35",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 147,
+                "Customer_Wish_List_ID": 69,
+                "Product_ID": 896,
+                "Product_Price": "117.35",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 148,
+                "Customer_Wish_List_ID": 70,
+                "Product_ID": 154,
+                "Product_Price": "357.74",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 149,
+                "Customer_Wish_List_ID": 71,
+                "Product_ID": 780,
+                "Product_Price": "156.72",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 150,
+                "Customer_Wish_List_ID": 72,
+                "Product_ID": 430,
+                "Product_Price": "326.24",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 151,
+                "Customer_Wish_List_ID": 73,
+                "Product_ID": 826,
+                "Product_Price": "59.92",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 152,
+                "Customer_Wish_List_ID": 73,
+                "Product_ID": 482,
+                "Product_Price": "464.92",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 153,
+                "Customer_Wish_List_ID": 73,
+                "Product_ID": 345,
+                "Product_Price": "485.16",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 154,
+                "Customer_Wish_List_ID": 74,
+                "Product_ID": 864,
+                "Product_Price": "176.75",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 155,
+                "Customer_Wish_List_ID": 74,
+                "Product_ID": 779,
+                "Product_Price": "62.68",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 156,
+                "Customer_Wish_List_ID": 75,
+                "Product_ID": 533,
+                "Product_Price": "302.55",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 157,
+                "Customer_Wish_List_ID": 75,
+                "Product_ID": 632,
+                "Product_Price": "475.39",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 158,
+                "Customer_Wish_List_ID": 75,
+                "Product_ID": 849,
+                "Product_Price": "175.83",
+                "Created_Date": "2026-04-23 16:16:18.550000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 159,
+                "Customer_Wish_List_ID": 76,
+                "Product_ID": 174,
+                "Product_Price": "269.41",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 160,
+                "Customer_Wish_List_ID": 76,
+                "Product_ID": 139,
+                "Product_Price": "261.66",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 161,
+                "Customer_Wish_List_ID": 76,
+                "Product_ID": 633,
+                "Product_Price": "215.42",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 162,
+                "Customer_Wish_List_ID": 77,
+                "Product_ID": 148,
+                "Product_Price": "32.94",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 163,
+                "Customer_Wish_List_ID": 77,
+                "Product_ID": 990,
+                "Product_Price": "320.78",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 164,
+                "Customer_Wish_List_ID": 78,
+                "Product_ID": 967,
+                "Product_Price": "251.24",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 165,
+                "Customer_Wish_List_ID": 79,
+                "Product_ID": 852,
+                "Product_Price": "226.0",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 166,
+                "Customer_Wish_List_ID": 79,
+                "Product_ID": 711,
+                "Product_Price": "351.97",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 167,
+                "Customer_Wish_List_ID": 80,
+                "Product_ID": 871,
+                "Product_Price": "287.31",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 168,
+                "Customer_Wish_List_ID": 81,
+                "Product_ID": 986,
+                "Product_Price": "255.34",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 169,
+                "Customer_Wish_List_ID": 81,
+                "Product_ID": 702,
+                "Product_Price": "55.93",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 170,
+                "Customer_Wish_List_ID": 81,
+                "Product_ID": 337,
+                "Product_Price": "107.78",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 171,
+                "Customer_Wish_List_ID": 82,
+                "Product_ID": 809,
+                "Product_Price": "229.31",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 172,
+                "Customer_Wish_List_ID": 82,
+                "Product_ID": 907,
+                "Product_Price": "299.52",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 173,
+                "Customer_Wish_List_ID": 82,
+                "Product_ID": 523,
+                "Product_Price": "121.47",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 174,
+                "Customer_Wish_List_ID": 83,
+                "Product_ID": 994,
+                "Product_Price": "120.33",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 175,
+                "Customer_Wish_List_ID": 84,
+                "Product_ID": 214,
+                "Product_Price": "177.57",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 176,
+                "Customer_Wish_List_ID": 84,
+                "Product_ID": 580,
+                "Product_Price": "168.24",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 177,
+                "Customer_Wish_List_ID": 85,
+                "Product_ID": 512,
+                "Product_Price": "204.83",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 178,
+                "Customer_Wish_List_ID": 86,
+                "Product_ID": 756,
+                "Product_Price": "375.15",
+                "Created_Date": "2026-04-23 16:16:18.551000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 179,
+                "Customer_Wish_List_ID": 87,
+                "Product_ID": 670,
+                "Product_Price": "246.58",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 180,
+                "Customer_Wish_List_ID": 88,
+                "Product_ID": 689,
+                "Product_Price": "418.32",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 181,
+                "Customer_Wish_List_ID": 89,
+                "Product_ID": 299,
+                "Product_Price": "495.4",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 182,
+                "Customer_Wish_List_ID": 89,
+                "Product_ID": 575,
+                "Product_Price": "158.69",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 183,
+                "Customer_Wish_List_ID": 90,
+                "Product_ID": 527,
+                "Product_Price": "398.0",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 184,
+                "Customer_Wish_List_ID": 90,
+                "Product_ID": 741,
+                "Product_Price": "29.99",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 185,
+                "Customer_Wish_List_ID": 90,
+                "Product_ID": 898,
+                "Product_Price": "181.68",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 186,
+                "Customer_Wish_List_ID": 91,
+                "Product_ID": 438,
+                "Product_Price": "389.4",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 187,
+                "Customer_Wish_List_ID": 92,
+                "Product_ID": 379,
+                "Product_Price": "193.39",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 188,
+                "Customer_Wish_List_ID": 93,
+                "Product_ID": 597,
+                "Product_Price": "195.55",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 189,
+                "Customer_Wish_List_ID": 93,
+                "Product_ID": 482,
+                "Product_Price": "250.43",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 190,
+                "Customer_Wish_List_ID": 94,
+                "Product_ID": 990,
+                "Product_Price": "458.65",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 191,
+                "Customer_Wish_List_ID": 94,
+                "Product_ID": 272,
+                "Product_Price": "169.22",
+                "Created_Date": "2026-04-23 16:16:18.552000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 192,
+                "Customer_Wish_List_ID": 95,
+                "Product_ID": 954,
+                "Product_Price": "435.7",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 193,
+                "Customer_Wish_List_ID": 96,
+                "Product_ID": 319,
+                "Product_Price": "301.76",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 194,
+                "Customer_Wish_List_ID": 96,
+                "Product_ID": 499,
+                "Product_Price": "42.7",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 195,
+                "Customer_Wish_List_ID": 96,
+                "Product_ID": 300,
+                "Product_Price": "316.77",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 196,
+                "Customer_Wish_List_ID": 97,
+                "Product_ID": 204,
+                "Product_Price": "396.42",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 197,
+                "Customer_Wish_List_ID": 97,
+                "Product_ID": 540,
+                "Product_Price": "46.78",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 198,
+                "Customer_Wish_List_ID": 97,
+                "Product_ID": 101,
+                "Product_Price": "118.36",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 199,
+                "Customer_Wish_List_ID": 98,
+                "Product_ID": 631,
+                "Product_Price": "134.65",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 200,
+                "Customer_Wish_List_ID": 98,
+                "Product_ID": 490,
+                "Product_Price": "327.78",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 201,
+                "Customer_Wish_List_ID": 98,
+                "Product_ID": 724,
+                "Product_Price": "265.35",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 202,
+                "Customer_Wish_List_ID": 99,
+                "Product_ID": 530,
+                "Product_Price": "238.22",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            },
+            {
+                "Customer_Wish_List_Item_ID": 203,
+                "Customer_Wish_List_ID": 100,
+                "Product_ID": 188,
+                "Product_Price": "235.16",
+                "Created_Date": "2026-04-23 16:16:18.553000",
+                "Modified_Date": null
+            }
+        ]
     }
 }

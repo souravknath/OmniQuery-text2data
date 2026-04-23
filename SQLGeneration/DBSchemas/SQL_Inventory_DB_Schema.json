@@ -72,6 +72,12 @@
                     "default": null
                 },
                 {
+                    "name": "Product_Price",
+                    "type": "DECIMAL(10, 2)",
+                    "nullable": false,
+                    "default": null
+                },
+                {
                     "name": "Product_Description",
                     "type": "VARCHAR COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
                     "nullable": false,

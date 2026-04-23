@@ -66,15 +66,15 @@ def _mongo_db():
 # Placeholder resolution
 # Patterns handled (case-insensitive for IN keyword):
 # ---------------------------------------------------------------------------
-_RE_IN   = re.compile(r'\bIN\s*\(\s*\{([\w.]+)\.(\w+)\}\s*\)', re.IGNORECASE)
-_RE_EQ   = re.compile(r'(=\s*ANY\s*\(|=\s*)\{([\w.]+)\.(\w+)\}(\s*\))?', re.IGNORECASE)
-_RE_BARE = re.compile(r'\{([\w.]+)\.(\w+)\}')
+_RE_IN   = re.compile(r'\bIN\s*\(\s*\{?\{([\w.]+)\.(\w+)\}\}?\s*\)', re.IGNORECASE)
+_RE_EQ   = re.compile(r'(=\s*ANY\s*\(|=\s*)\{?\{([\w.]+)\.(\w+)\}\}?(\s*\))?', re.IGNORECASE)
+_RE_BARE = re.compile(r'\{?\{([\w.]+)\.(\w+)\}\}?')
 # Strip "AND <expr> IN ({placeholder})" or "AND <expr> = {placeholder}" when upstream is empty
-_RE_AND_IN  = re.compile(r'\s+AND\s+[\w."]+\s+IN\s*\(\s*\{[\w.]+\.\w+\}\s*\)', re.IGNORECASE)
-_RE_AND_EQ  = re.compile(r'\s+AND\s+[\w."]+\s*=\s*(?:ANY\s*\()?\s*\{[\w.]+\.\w+\}\s*\)?', re.IGNORECASE)
+_RE_AND_IN  = re.compile(r'\s+AND\s+[\w."]+\s+IN\s*\(\s*\{?\{[\w.]+\.\w+\}\}?\s*\)', re.IGNORECASE)
+_RE_AND_EQ  = re.compile(r'\s+AND\s+[\w."]+\s*=\s*(?:ANY\s*\()?\s*\{?\{[\w.]+\.\w+\}\}?\s*\)?', re.IGNORECASE)
 
 
-def _resolve_placeholders(query: str, results_so_far: dict) -> str:
+def _resolve_placeholders(query: str, results_so_far: dict, is_mongo: bool = False) -> str:
     def _values_for(db_key, field):
         rows = results_so_far.get(db_key, [])
         values = []
@@ -89,6 +89,8 @@ def _resolve_placeholders(query: str, results_so_far: dict) -> str:
         return values
 
     def _fmt(values):
+        if is_mongo:
+            return values  # Return raw values for JSON serialization
         return [f"'{v}'" if isinstance(v, str) else str(v) for v in values]
 
     def _is_empty_upstream(placeholder_text: str) -> bool:
@@ -151,6 +153,8 @@ def _resolve_placeholders(query: str, results_so_far: dict) -> str:
         values = _values_for(db_key, field)
         if not values:
             return "NULL"
+        if is_mongo:
+            return ", ".join([json.dumps(v) for v in values])
         return ", ".join(_fmt(values))
 
     return _RE_BARE.sub(_sub_bare, query)
@@ -297,9 +301,8 @@ def execute_plan(plan_file: str = "llm_output.json",
             continue
 
         raw_query     = db_queries[db_name]
-        resolved_query = _resolve_placeholders(raw_query, results_so_far)
-
         db_type = _detect_db_type(db_name)
+        resolved_query = _resolve_placeholders(raw_query, results_so_far, is_mongo=(db_type == "mongo"))
         print(f"[RUN]   {db_name}  ({db_type})")
         print(f"        Query : {resolved_query[:300]}{'...' if len(resolved_query) > 300 else ''}")
 

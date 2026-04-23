@@ -71,7 +71,9 @@ if __name__ == "__main__":
         - For MongoDB (Mongo_Customer_DB), output a stringified JSON object exactly in this format: '{{"collection": "collection_name", "pipeline": [...]}}'
         - If you query the same database multiple times (e.g. for different collections or tables), give each entry a UNIQUE name in the "databases" list and "execution_order" (e.g. "Mongo_Customer_Address", "Mongo_Customer_Profile").
         - Only query the databases necessary to answer the user's prompt.
-        - If a query depends on the results of another query, use a placeholder like {{DatabaseName.FieldName}} in the WHERE clause or Mongo filter.
+        - If a query depends on the results of another query, use a placeholder like {{DatabaseName.FieldName}} or {{{{DatabaseName.FieldName}}}}.
+        - IMPORTANT: Ensure all opened parentheses `(` are correctly closed `)`. Check subqueries and `IN (...)` clauses carefully.
+        - IMPORTANT: If a table name is a reserved word (e.g., "Order"), wrap it in double quotes (e.g., `"Order"`).
         - Determine the correct "execution_order" array, specifying the sequence of databases to query so dependencies are resolved.
         - Ensure the join conditions correctly map the fields between the different database results.
         - Do not hallucinate columns, tables, or collections. Only use what is provided in the schema.
@@ -104,7 +106,8 @@ if __name__ == "__main__":
         }}
         """
 
-    user_prompt = "Get total order amount per customer for customers in USA who bought the product Webcam HD"
+    import sys
+    user_prompt = sys.argv[1] if len(sys.argv) > 1 else "Get total order amount per customer for customers in Phoenix who bought the product Webcam HD"
 
     sql_query = sql_generator.generate_sql(system_prompt, user_prompt)
 
