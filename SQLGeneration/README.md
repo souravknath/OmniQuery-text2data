@@ -13,3 +13,6 @@ python .\multipleDB_QueryGenerator.py
 
 6. **Execute SQL query**:
 python .\QueryExecutor.py
+
+7. **Joining the final results**:
+python .\DataJoiner.py
