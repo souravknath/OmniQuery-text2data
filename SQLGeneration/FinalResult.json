@@ -1,0 +1,477 @@
+{
+    "join_type": "inner",
+    "conditions": [
+        "Mongo_Customer_Address_USA.Customer_ID = Postgres_Order_Totals.Customer_ID"
+    ],
+    "final_select": [
+        "Postgres_Order_Totals.Customer_ID",
+        "Mongo_Customer_Address_USA.First_Name",
+        "Mongo_Customer_Address_USA.Last_Name",
+        "Postgres_Order_Totals.Total_Order_Amount"
+    ],
+    "row_count": 77,
+    "results": [
+        {
+            "Postgres_Order_Totals.Customer_ID": 1,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Wilson",
+            "Postgres_Order_Totals.Total_Order_Amount": "32.47"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 2,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Garcia",
+            "Postgres_Order_Totals.Total_Order_Amount": "2323.18"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 3,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "1648.28"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 5,
+            "Mongo_Customer_Address_USA.First_Name": "Karen",
+            "Mongo_Customer_Address_USA.Last_Name": "Wilson",
+            "Postgres_Order_Totals.Total_Order_Amount": "806.94"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 5,
+            "Mongo_Customer_Address_USA.First_Name": "Karen",
+            "Mongo_Customer_Address_USA.Last_Name": "Wilson",
+            "Postgres_Order_Totals.Total_Order_Amount": "806.94"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 6,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Smith",
+            "Postgres_Order_Totals.Total_Order_Amount": "5351.36"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 6,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Smith",
+            "Postgres_Order_Totals.Total_Order_Amount": "5351.36"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 7,
+            "Mongo_Customer_Address_USA.First_Name": "Jessica",
+            "Mongo_Customer_Address_USA.Last_Name": "Martin",
+            "Postgres_Order_Totals.Total_Order_Amount": "3130.40"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 8,
+            "Mongo_Customer_Address_USA.First_Name": "Charles",
+            "Mongo_Customer_Address_USA.Last_Name": "Anderson",
+            "Postgres_Order_Totals.Total_Order_Amount": "544.34"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 10,
+            "Mongo_Customer_Address_USA.First_Name": "Susan",
+            "Mongo_Customer_Address_USA.Last_Name": "Moore",
+            "Postgres_Order_Totals.Total_Order_Amount": "3058.50"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 10,
+            "Mongo_Customer_Address_USA.First_Name": "Susan",
+            "Mongo_Customer_Address_USA.Last_Name": "Moore",
+            "Postgres_Order_Totals.Total_Order_Amount": "3058.50"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 11,
+            "Mongo_Customer_Address_USA.First_Name": "Susan",
+            "Mongo_Customer_Address_USA.Last_Name": "Davis",
+            "Postgres_Order_Totals.Total_Order_Amount": "2295.09"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 12,
+            "Mongo_Customer_Address_USA.First_Name": "Sarah",
+            "Mongo_Customer_Address_USA.Last_Name": "Rodriguez",
+            "Postgres_Order_Totals.Total_Order_Amount": "1174.94"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 13,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Brown",
+            "Postgres_Order_Totals.Total_Order_Amount": "3571.22"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 14,
+            "Mongo_Customer_Address_USA.First_Name": "Susan",
+            "Mongo_Customer_Address_USA.Last_Name": "Hernandez",
+            "Postgres_Order_Totals.Total_Order_Amount": "2630.67"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 15,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Martin",
+            "Postgres_Order_Totals.Total_Order_Amount": "2318.74"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 20,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Taylor",
+            "Postgres_Order_Totals.Total_Order_Amount": "2576.33"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 20,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Taylor",
+            "Postgres_Order_Totals.Total_Order_Amount": "2576.33"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 24,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Brown",
+            "Postgres_Order_Totals.Total_Order_Amount": "655.68"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 24,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Brown",
+            "Postgres_Order_Totals.Total_Order_Amount": "655.68"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 25,
+            "Mongo_Customer_Address_USA.First_Name": "Elizabeth",
+            "Mongo_Customer_Address_USA.Last_Name": "Smith",
+            "Postgres_Order_Totals.Total_Order_Amount": "2543.54"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 26,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Miller",
+            "Postgres_Order_Totals.Total_Order_Amount": "2430.54"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 26,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Miller",
+            "Postgres_Order_Totals.Total_Order_Amount": "2430.54"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 28,
+            "Mongo_Customer_Address_USA.First_Name": "Karen",
+            "Mongo_Customer_Address_USA.Last_Name": "Jackson",
+            "Postgres_Order_Totals.Total_Order_Amount": "6242.70"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 30,
+            "Mongo_Customer_Address_USA.First_Name": "Mary",
+            "Mongo_Customer_Address_USA.Last_Name": "Hernandez",
+            "Postgres_Order_Totals.Total_Order_Amount": "5179.62"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 31,
+            "Mongo_Customer_Address_USA.First_Name": "David",
+            "Mongo_Customer_Address_USA.Last_Name": "Jones",
+            "Postgres_Order_Totals.Total_Order_Amount": "10679.61"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 34,
+            "Mongo_Customer_Address_USA.First_Name": "Mary",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "4685.15"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 34,
+            "Mongo_Customer_Address_USA.First_Name": "Mary",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "4685.15"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 35,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Brown",
+            "Postgres_Order_Totals.Total_Order_Amount": "2565.29"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 36,
+            "Mongo_Customer_Address_USA.First_Name": "Sarah",
+            "Mongo_Customer_Address_USA.Last_Name": "Davis",
+            "Postgres_Order_Totals.Total_Order_Amount": "1824.61"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 37,
+            "Mongo_Customer_Address_USA.First_Name": "Sarah",
+            "Mongo_Customer_Address_USA.Last_Name": "Taylor",
+            "Postgres_Order_Totals.Total_Order_Amount": "1938.76"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 37,
+            "Mongo_Customer_Address_USA.First_Name": "Sarah",
+            "Mongo_Customer_Address_USA.Last_Name": "Taylor",
+            "Postgres_Order_Totals.Total_Order_Amount": "1938.76"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 38,
+            "Mongo_Customer_Address_USA.First_Name": "Mary",
+            "Mongo_Customer_Address_USA.Last_Name": "Thomas",
+            "Postgres_Order_Totals.Total_Order_Amount": "165.07"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 39,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Jackson",
+            "Postgres_Order_Totals.Total_Order_Amount": "1149.25"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 41,
+            "Mongo_Customer_Address_USA.First_Name": "Elizabeth",
+            "Mongo_Customer_Address_USA.Last_Name": "Martin",
+            "Postgres_Order_Totals.Total_Order_Amount": "2405.04"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 42,
+            "Mongo_Customer_Address_USA.First_Name": "John",
+            "Mongo_Customer_Address_USA.Last_Name": "Brown",
+            "Postgres_Order_Totals.Total_Order_Amount": "852.61"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 44,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "1711.65"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 45,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Jones",
+            "Postgres_Order_Totals.Total_Order_Amount": "2162.66"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 47,
+            "Mongo_Customer_Address_USA.First_Name": "Jessica",
+            "Mongo_Customer_Address_USA.Last_Name": "Anderson",
+            "Postgres_Order_Totals.Total_Order_Amount": "2266.47"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 50,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Jones",
+            "Postgres_Order_Totals.Total_Order_Amount": "4689.56"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 51,
+            "Mongo_Customer_Address_USA.First_Name": "Karen",
+            "Mongo_Customer_Address_USA.Last_Name": "Johnson",
+            "Postgres_Order_Totals.Total_Order_Amount": "5993.84"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 52,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Jackson",
+            "Postgres_Order_Totals.Total_Order_Amount": "1490.92"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 54,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Rodriguez",
+            "Postgres_Order_Totals.Total_Order_Amount": "850.13"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 55,
+            "Mongo_Customer_Address_USA.First_Name": "Joseph",
+            "Mongo_Customer_Address_USA.Last_Name": "Wilson",
+            "Postgres_Order_Totals.Total_Order_Amount": "1464.82"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 59,
+            "Mongo_Customer_Address_USA.First_Name": "Jessica",
+            "Mongo_Customer_Address_USA.Last_Name": "Moore",
+            "Postgres_Order_Totals.Total_Order_Amount": "2806.64"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 60,
+            "Mongo_Customer_Address_USA.First_Name": "Jennifer",
+            "Mongo_Customer_Address_USA.Last_Name": "Smith",
+            "Postgres_Order_Totals.Total_Order_Amount": "2045.68"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 61,
+            "Mongo_Customer_Address_USA.First_Name": "Barbara",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "907.06"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 61,
+            "Mongo_Customer_Address_USA.First_Name": "Barbara",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "907.06"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 62,
+            "Mongo_Customer_Address_USA.First_Name": "Jessica",
+            "Mongo_Customer_Address_USA.Last_Name": "Davis",
+            "Postgres_Order_Totals.Total_Order_Amount": "717.28"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 64,
+            "Mongo_Customer_Address_USA.First_Name": "John",
+            "Mongo_Customer_Address_USA.Last_Name": "Wilson",
+            "Postgres_Order_Totals.Total_Order_Amount": "2698.46"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 65,
+            "Mongo_Customer_Address_USA.First_Name": "Sarah",
+            "Mongo_Customer_Address_USA.Last_Name": "Johnson",
+            "Postgres_Order_Totals.Total_Order_Amount": "1679.80"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 66,
+            "Mongo_Customer_Address_USA.First_Name": "Michael",
+            "Mongo_Customer_Address_USA.Last_Name": "Thomas",
+            "Postgres_Order_Totals.Total_Order_Amount": "4908.12"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 67,
+            "Mongo_Customer_Address_USA.First_Name": "Elizabeth",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "1546.15"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 68,
+            "Mongo_Customer_Address_USA.First_Name": "Elizabeth",
+            "Mongo_Customer_Address_USA.Last_Name": "Gonzalez",
+            "Postgres_Order_Totals.Total_Order_Amount": "6769.64"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 69,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Wilson",
+            "Postgres_Order_Totals.Total_Order_Amount": "2264.99"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 70,
+            "Mongo_Customer_Address_USA.First_Name": "Jennifer",
+            "Mongo_Customer_Address_USA.Last_Name": "Miller",
+            "Postgres_Order_Totals.Total_Order_Amount": "629.92"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 71,
+            "Mongo_Customer_Address_USA.First_Name": "Jessica",
+            "Mongo_Customer_Address_USA.Last_Name": "Taylor",
+            "Postgres_Order_Totals.Total_Order_Amount": "3231.58"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 72,
+            "Mongo_Customer_Address_USA.First_Name": "Linda",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "1256.94"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 72,
+            "Mongo_Customer_Address_USA.First_Name": "Linda",
+            "Mongo_Customer_Address_USA.Last_Name": "Martinez",
+            "Postgres_Order_Totals.Total_Order_Amount": "1256.94"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 74,
+            "Mongo_Customer_Address_USA.First_Name": "Joseph",
+            "Mongo_Customer_Address_USA.Last_Name": "Wilson",
+            "Postgres_Order_Totals.Total_Order_Amount": "2472.46"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 75,
+            "Mongo_Customer_Address_USA.First_Name": "Mary",
+            "Mongo_Customer_Address_USA.Last_Name": "Miller",
+            "Postgres_Order_Totals.Total_Order_Amount": "920.23"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 77,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Williams",
+            "Postgres_Order_Totals.Total_Order_Amount": "2256.38"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 77,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Williams",
+            "Postgres_Order_Totals.Total_Order_Amount": "2256.38"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 78,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Hernandez",
+            "Postgres_Order_Totals.Total_Order_Amount": "3357.05"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 80,
+            "Mongo_Customer_Address_USA.First_Name": "Thomas",
+            "Mongo_Customer_Address_USA.Last_Name": "Jackson",
+            "Postgres_Order_Totals.Total_Order_Amount": "2062.18"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 85,
+            "Mongo_Customer_Address_USA.First_Name": "Jennifer",
+            "Mongo_Customer_Address_USA.Last_Name": "Williams",
+            "Postgres_Order_Totals.Total_Order_Amount": "2661.39"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 88,
+            "Mongo_Customer_Address_USA.First_Name": "Patricia",
+            "Mongo_Customer_Address_USA.Last_Name": "Smith",
+            "Postgres_Order_Totals.Total_Order_Amount": "1666.15"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 88,
+            "Mongo_Customer_Address_USA.First_Name": "Patricia",
+            "Mongo_Customer_Address_USA.Last_Name": "Smith",
+            "Postgres_Order_Totals.Total_Order_Amount": "1666.15"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 89,
+            "Mongo_Customer_Address_USA.First_Name": "Elizabeth",
+            "Mongo_Customer_Address_USA.Last_Name": "Miller",
+            "Postgres_Order_Totals.Total_Order_Amount": "2699.04"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 90,
+            "Mongo_Customer_Address_USA.First_Name": "Jessica",
+            "Mongo_Customer_Address_USA.Last_Name": "Martin",
+            "Postgres_Order_Totals.Total_Order_Amount": "4411.74"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 93,
+            "Mongo_Customer_Address_USA.First_Name": "Patricia",
+            "Mongo_Customer_Address_USA.Last_Name": "Gonzalez",
+            "Postgres_Order_Totals.Total_Order_Amount": "924.13"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 94,
+            "Mongo_Customer_Address_USA.First_Name": "William",
+            "Mongo_Customer_Address_USA.Last_Name": "Lopez",
+            "Postgres_Order_Totals.Total_Order_Amount": "5239.35"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 95,
+            "Mongo_Customer_Address_USA.First_Name": "Richard",
+            "Mongo_Customer_Address_USA.Last_Name": "Johnson",
+            "Postgres_Order_Totals.Total_Order_Amount": "2298.82"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 96,
+            "Mongo_Customer_Address_USA.First_Name": "Michael",
+            "Mongo_Customer_Address_USA.Last_Name": "Taylor",
+            "Postgres_Order_Totals.Total_Order_Amount": "2675.45"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 96,
+            "Mongo_Customer_Address_USA.First_Name": "Michael",
+            "Mongo_Customer_Address_USA.Last_Name": "Taylor",
+            "Postgres_Order_Totals.Total_Order_Amount": "2675.45"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 97,
+            "Mongo_Customer_Address_USA.First_Name": "Robert",
+            "Mongo_Customer_Address_USA.Last_Name": "Smith",
+            "Postgres_Order_Totals.Total_Order_Amount": "2737.61"
+        },
+        {
+            "Postgres_Order_Totals.Customer_ID": 100,
+            "Mongo_Customer_Address_USA.First_Name": "James",
+            "Mongo_Customer_Address_USA.Last_Name": "Jones",
+            "Postgres_Order_Totals.Total_Order_Amount": "5103.73"
+        }
+    ]
+}
