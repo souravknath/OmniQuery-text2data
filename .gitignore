@@ -1,9 +1,30 @@
+
+# Environments
 .env
+.env.local
+backend/.env
+
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
 venv/
-*.pyc
-logs/
-scratch/
+.venv/
+env/
+.env/
+
+# Node.js
 node_modules/
 dist/
-.angular/
+dist-ssr/
+*.local
+
+# Logs
+logs/
+*.log
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+

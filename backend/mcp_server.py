@@ -46,29 +46,27 @@ def get_metadata():
         _metadata_cache = {
             "InventoryDB_SQL_Server": {
                 "schema": inventory_meta["schema"],
-                "samples": inventory_meta["samples"],
                 "relationships": inventory_meta.get("relationships", [])
             },
             "SalesDB_PostgreSQL": {
                 "schema": sales_meta["schema"],
-                "samples": sales_meta["samples"],
                 "relationships": sales_meta.get("relationships", [])
             },
             "CustomerDB_MongoDB": {
-                "schema": customer_meta["schema"],
-                "samples": customer_meta["samples"]
+                "schema": customer_meta["schema"]
             }
         }
     return _metadata_cache
 
 @mcp.tool()
 def get_database_info() -> str:
-    """Returns the schema, sample data, and relationships for all available databases (SQL, Postgres, Mongo). Call this FIRST to understand the data structure."""
+    """Returns the schema and relationships for all available databases (SQL, Postgres, Mongo). Call this FIRST to understand the data structure."""
     metadata = get_metadata()
     return json.dumps(metadata, indent=2, default=str)
 
 
 def execute_nosql(db_name: str, collection_name: str, query_type: str, query_payload: str):
+    print(f"--- [Mongo Query] Type: {query_type} | Collection: {collection_name} | Payload: {query_payload}", file=sys.stderr)
     try:
         client = get_mongo_client()
         payload = json.loads(query_payload)
@@ -95,6 +93,7 @@ def query_customer_db(collection_name: str, query_payload: str, query_type: str 
 @mcp.tool()
 def query_inventory_db(sql_query: str) -> str:
     """Query SQL Server InventoryDB for products and stock. Use T-SQL and quote [keywords]."""
+    print(f"--- [SQL Server Query]: {sql_query}", file=sys.stderr)
     conn_str = os.getenv("SQL_DB_CONN") or r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
     conn = None
     try:
@@ -116,6 +115,7 @@ def query_inventory_db(sql_query: str) -> str:
 @mcp.tool()
 def query_sales_db(sql_query: str) -> str:
     """Query PostgreSQL SalesDB for orders and revenue. Use Standard SQL and quote \"keywords\"."""
+    print(f"--- [Postgres Query]: {sql_query}", file=sys.stderr)
     conn_str = os.getenv("PG_DB_CONN")
     conn = None
     try:
