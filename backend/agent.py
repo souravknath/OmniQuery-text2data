@@ -239,12 +239,23 @@ Each step must have:
   - "query_hint": (the actual SQL/NoSQL query to execute)
 
 Rules:
-1. Order the steps to minimize cross-joins: prefer to start with the DB that contains the "anchor" entity of the user's question.
+1. Order the steps to minimize cross-joins. Note: For "Top" queries, the database containing the ranking metric (e.g., order amount in SalesDB) is the primary starting point, even if the user asks for "Customers" or "Products".
 2. If a later step depends on IDs from an earlier step, say so in the "reason".
 3. Output ONLY valid JSON. No markdown, no explanation outside the array.
 4. Write SIMPLE, direct SQL/NoSQL queries. Do NOT generate unnecessary nested subqueries. Use basic JOINs or simple SELECTs with LIMIT for straightforward requests.
 5. IMPORTANT: Quote reserved keywords appropriately for the target DB (e.g., "Order" in PostgreSQL, [Order] in SQL Server).
-6. CRITICAL: If the user's request can be entirely fulfilled by querying a SINGLE database (e.g., getting top orders from SalesDB), your execution plan MUST contain ONLY ONE step. Do NOT artificially split simple queries into multiple steps or fetch IDs first unnecessarily.
+6. CRITICAL: If the user's request can be entirely fulfilled by querying a SINGLE database (e.g., getting top orders from SalesDB), your execution plan MUST contain ONLY ONE step.
+7. "Top" vs "Latest" Definitions:
+   - "Top" means based on Ranking / value, sorted by a metric (e.g., score, amount, revenue), highest sales, or best results.
+   - "Latest" means based on Time, sorted by date/time (DESC), recent entries, or newest data.
+8. Specific Multi-Step Logic for "Top" entities:
+   - For "Top N Customers":
+       Step 1: Query SalesDB_PostgreSQL to identify top N customers based on order amount (e.g., SELECT customer_id, order_amount FROM "Order" ORDER BY order_amount DESC LIMIT N).
+       Step 2: Use the IDs from Step 1 to fetch full customer profile details from CustomerDB_MongoDB.
+       Synthesis: Combine customer details (name, profile) with the order amount in the final table.
+   - For "Top N Products":
+       Step 1: Query SalesDB_PostgreSQL to identify top products by order amount.
+       Step 2: Use product IDs to fetch product names and details from InventoryDB_SQL_Server.
 
 Example format:
 [
@@ -252,8 +263,15 @@ Example format:
     "step": 1,
     "db": "SalesDB_PostgreSQL",
     "tool": "query_sales_db",
-    "reason": "User asked for orders — SalesDB is the primary source.",
-    "query_hint": "SELECT * FROM \\"Order\\" ORDER BY order_amount DESC LIMIT 10"
+    "reason": "Identify top 2 customers by order amount first.",
+    "query_hint": "SELECT customer_id, order_amount FROM \\"Order\\" ORDER BY order_amount DESC LIMIT 2"
+  }},
+  {{
+    "step": 2,
+    "db": "CustomerDB_MongoDB",
+    "tool": "query_customer_db",
+    "reason": "Fetch profile details for the identified customer IDs.",
+    "query_hint": "{{\\"customer_id\\": {{\\"$in\\": [92, 28]}}}}"
   }}
 ]
 """.strip()
@@ -532,9 +550,13 @@ async def run_agent(user_input: str):
                     "  • SQL Server  — InventoryDB  (products & stock)\n"
                     "  • PostgreSQL  — SalesDB      (orders & revenue)\n"
                     "  • MongoDB     — CustomerDB   (customer profiles)\n\n"
+                    "DEFINITIONS:\n"
+                    "  - 'Top' means based on Ranking/value, sorted by metric (score, amount, revenue), highest sales, or best results.\n"
+                    "  - 'Latest' means based on Time, sorted by date/time (DESC), recent entries, or newest data.\n\n"
                     "IMPORTANT: DB schemas have already been fetched and an execution plan has been generated.\n"
                     "Your job now is to execute any remaining queries from the plan (in order), "
                     "then synthesize all results into a clean Markdown TABLE as the final answer.\n"
+                    "SYNTHESIS RULE: For 'Top N' queries across databases, you MUST merge the records (e.g., show Customer Name from MongoDB alongside Order Amount from Postgres).\n"
                     "Handle reserved keywords: [SQL Server] brackets, \"PostgreSQL\" double-quotes."
                 )
 

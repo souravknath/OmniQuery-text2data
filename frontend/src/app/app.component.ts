@@ -13,7 +13,7 @@ Chart.register(...registerables);
   standalone: true
 })
 export class MarkdownPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) { }
   transform(value: string): SafeHtml {
     if (!value) return '';
     const html = marked.parse(value) as string;
@@ -54,7 +54,7 @@ export class AppComponent implements AfterViewChecked {
   userMessage = '';
   messages: Message[] = [
     {
-      text: 'Hello! I can help you query the Users and Orders databases. What would you like to know?',
+      text: 'Hello! I can help you analyze **Sales, Customers, and Inventory** across multiple databases.',
       sender: 'agent',
       timestamp: new Date()
     }
@@ -78,7 +78,7 @@ export class AppComponent implements AfterViewChecked {
 
   toggleVisualization(index: number) {
     const msg = this.messages[index];
-    
+
     if (msg.showChart) {
       if (msg.chartInstance) {
         msg.chartInstance.destroy();
@@ -90,7 +90,7 @@ export class AppComponent implements AfterViewChecked {
       if (!msg.chartData) {
         this.parseTableForChart(index);
       }
-      
+
       // Only show if we actually have data
       if (msg.chartData && msg.chartData.labels.length > 0) {
         msg.showChart = true;
@@ -104,7 +104,7 @@ export class AppComponent implements AfterViewChecked {
   parseTableForChart(index: number) {
     const msg = this.messages[index];
     const tokens = marked.lexer(msg.text);
-    
+
     // Recursive search for table token
     const findTable = (tokenList: any[]): any => {
       for (const t of tokenList) {
@@ -156,12 +156,12 @@ export class AppComponent implements AfterViewChecked {
       // Fallback: just pick any numeric column if no other exists
       bestDataCol = columnScores.findIndex((s: number) => s > rows.length / 2);
     }
-    
+
     dataColIndex = bestDataCol;
-    
+
     // Pick first non-numeric column as label
     labelColIndex = columnScores.findIndex((s: number) => s === 0);
-    
+
     if (dataColIndex === -1) {
       // Last resort: find any column that has at least one number
       dataColIndex = columnScores.findIndex((s: number) => s > 0);
@@ -200,7 +200,7 @@ export class AppComponent implements AfterViewChecked {
   initChart(index: number) {
     const msg = this.messages[index];
     const canvasRef = this.chartCanvases.toArray().find(c => c.nativeElement.id === `chart-${index}`);
-    
+
     if (canvasRef && msg.chartData) {
       msg.chartInstance = new Chart(canvasRef.nativeElement, {
         type: 'bar',
@@ -303,7 +303,7 @@ export class AppComponent implements AfterViewChecked {
         }
         return false;
       };
-      
+
       agentMessage.hasTable = hasTableToken(tokens);
 
     } catch (err) {
