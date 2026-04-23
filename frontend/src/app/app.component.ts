@@ -280,8 +280,10 @@ export class AppComponent implements AfterViewChecked {
             const data = JSON.parse(line);
             if (data.type === 'token') {
               agentMessage.text += data.content;
+            } else if (data.type === 'phase') {
+              this.currentStatus = data.content;
             } else if (data.type === 'tool_start') {
-              this.currentStatus = `Searching ${data.tool}...`;
+              this.currentStatus = `🔧 Running ${data.tool}...`;
             } else if (data.type === 'tool_end') {
               this.currentStatus = '';
             } else if (data.type === 'error') {

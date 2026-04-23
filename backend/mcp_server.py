@@ -8,8 +8,9 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from mcp.server.fastmcp import FastMCP
 
-load_dotenv()
-
+# Load environment variables from 'env' file in the same directory
+env_file = os.path.join(os.path.dirname(__file__), "env")
+load_dotenv(env_file, override=True)
 # Initialize the MCP Server
 mcp = FastMCP("OmniQuery Retail & Sales Engine")
 
@@ -66,7 +67,6 @@ def get_database_info() -> str:
 
 
 def execute_nosql(db_name: str, collection_name: str, query_type: str, query_payload: str):
-    print(f"--- [Mongo Query] Type: {query_type} | Collection: {collection_name} | Payload: {query_payload}", file=sys.stderr)
     try:
         client = get_mongo_client()
         payload = json.loads(query_payload)
@@ -93,7 +93,6 @@ def query_customer_db(collection_name: str, query_payload: str, query_type: str 
 @mcp.tool()
 def query_inventory_db(sql_query: str) -> str:
     """Query SQL Server InventoryDB for products and stock. Use T-SQL and quote [keywords]."""
-    print(f"--- [SQL Server Query]: {sql_query}", file=sys.stderr)
     conn_str = os.getenv("SQL_DB_CONN") or r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\MSSQLLocalDB;DATABASE=InventoryDB;Trusted_Connection=yes;"
     conn = None
     try:
@@ -115,7 +114,6 @@ def query_inventory_db(sql_query: str) -> str:
 @mcp.tool()
 def query_sales_db(sql_query: str) -> str:
     """Query PostgreSQL SalesDB for orders and revenue. Use Standard SQL and quote \"keywords\"."""
-    print(f"--- [Postgres Query]: {sql_query}", file=sys.stderr)
     conn_str = os.getenv("PG_DB_CONN")
     conn = None
     try:
