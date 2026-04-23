@@ -1,0 +1,288 @@
+{
+    "collections": {
+        "Customer_Address": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "Customer_Address_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Customer_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "City",
+                    "type": "str"
+                },
+                {
+                    "name": "State",
+                    "type": "str"
+                },
+                {
+                    "name": "Country",
+                    "type": "str"
+                },
+                {
+                    "name": "ZIP_Code",
+                    "type": "str"
+                },
+                {
+                    "name": "Primary_Contact_Number",
+                    "type": "str"
+                },
+                {
+                    "name": "Secondary_Contact_Number",
+                    "type": "str"
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "datetime"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "NoneType"
+                }
+            ]
+        },
+        "support_tickets": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "ticket_id",
+                    "type": "str"
+                },
+                {
+                    "name": "customer_id",
+                    "type": "str"
+                },
+                {
+                    "name": "issue_type",
+                    "type": "str"
+                },
+                {
+                    "name": "status",
+                    "type": "str"
+                },
+                {
+                    "name": "priority",
+                    "type": "str"
+                },
+                {
+                    "name": "created_at",
+                    "type": "datetime"
+                }
+            ]
+        },
+        "customers": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "customer_id",
+                    "type": "str"
+                },
+                {
+                    "name": "profile",
+                    "type": "dict"
+                },
+                {
+                    "name": "location",
+                    "type": "dict"
+                },
+                {
+                    "name": "segments",
+                    "type": "list"
+                },
+                {
+                    "name": "financial",
+                    "type": "dict"
+                },
+                {
+                    "name": "created_at",
+                    "type": "datetime"
+                },
+                {
+                    "name": "is_active",
+                    "type": "bool"
+                }
+            ]
+        },
+        "Customer_View_History": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "Customer_View_History_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Customer_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Product_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Product_Price",
+                    "type": "Decimal128"
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "datetime"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "NoneType"
+                }
+            ]
+        },
+        "Customer_Wish_List_Item": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "Customer_Wish_List_Item_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Customer_Wish_List_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Product_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Product_Price",
+                    "type": "Decimal128"
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "datetime"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "NoneType"
+                }
+            ]
+        },
+        "activities": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "activity_id",
+                    "type": "str"
+                },
+                {
+                    "name": "customer_id",
+                    "type": "str"
+                },
+                {
+                    "name": "activity_type",
+                    "type": "str"
+                },
+                {
+                    "name": "product_category",
+                    "type": "str"
+                },
+                {
+                    "name": "amount",
+                    "type": "int"
+                },
+                {
+                    "name": "timestamp",
+                    "type": "datetime"
+                }
+            ]
+        },
+        "Customer": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "Customer_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "First_Name",
+                    "type": "str"
+                },
+                {
+                    "name": "Middle_Name",
+                    "type": "str"
+                },
+                {
+                    "name": "Last_Name",
+                    "type": "str"
+                },
+                {
+                    "name": "DOB",
+                    "type": "datetime"
+                },
+                {
+                    "name": "Gender",
+                    "type": "str"
+                },
+                {
+                    "name": "Email_ID",
+                    "type": "str"
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "datetime"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "NoneType"
+                }
+            ]
+        },
+        "Customer_Wish_List": {
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "ObjectId"
+                },
+                {
+                    "name": "Customer_Wish_List_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Wish_List_Name",
+                    "type": "str"
+                },
+                {
+                    "name": "Customer_ID",
+                    "type": "int"
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "datetime"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "NoneType"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,470 @@
+{
+    "tables": {
+        "Locality": {
+            "columns": [
+                {
+                    "name": "Location_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Area",
+                    "type": "VARCHAR(100) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "City",
+                    "type": "VARCHAR(100) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "State",
+                    "type": "VARCHAR(100) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Country",
+                    "type": "VARCHAR(100) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "ZipCode",
+                    "type": "VARCHAR(20) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": "(getdate())"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "Location_ID"
+            ],
+            "foreign_keys": [],
+            "indexes": []
+        },
+        "Product": {
+            "columns": [
+                {
+                    "name": "Product_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_Name",
+                    "type": "VARCHAR(1000) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_Description",
+                    "type": "VARCHAR COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_Category_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": "(getdate())"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "Product_ID"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "Product_Category_ID"
+                    ],
+                    "referred_table": "Product_Category",
+                    "referred_columns": [
+                        "Product_Category_ID"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "Product_Category": {
+            "columns": [
+                {
+                    "name": "Product_Category_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_Category_Name",
+                    "type": "VARCHAR(1000) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Target_Gender",
+                    "type": "VARCHAR(10) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": true,
+                    "default": null
+                },
+                {
+                    "name": "Target_Age_Group_From",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null
+                },
+                {
+                    "name": "Target_Age_Group_To",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": "(getdate())"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "Product_Category_ID"
+            ],
+            "foreign_keys": [],
+            "indexes": []
+        },
+        "Product_Features": {
+            "columns": [
+                {
+                    "name": "Product_Feature_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_Feature_Name",
+                    "type": "VARCHAR(1000) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_Feature_Value",
+                    "type": "VARCHAR(1000) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": "(getdate())"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "Product_Feature_ID"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "Product_ID"
+                    ],
+                    "referred_table": "Product",
+                    "referred_columns": [
+                        "Product_ID"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "Product_Image": {
+            "columns": [
+                {
+                    "name": "Product_Image_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_Image",
+                    "type": "VARBINARY",
+                    "nullable": true,
+                    "default": null
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": "(getdate())"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "Product_Image_ID"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "Product_ID"
+                    ],
+                    "referred_table": "Product",
+                    "referred_columns": [
+                        "Product_ID"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "Store": {
+            "columns": [
+                {
+                    "name": "Store_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Location_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Store_Name",
+                    "type": "VARCHAR(200) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Store_Address",
+                    "type": "VARCHAR(1000) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Store_Owner_Name",
+                    "type": "VARCHAR(200) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Store_Owner_Phone",
+                    "type": "VARCHAR(20) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Store_Owner_Email",
+                    "type": "VARCHAR(100) COLLATE \"SQL_Latin1_General_CP1_CI_AS\"",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": "(getdate())"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "Store_ID"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "Location_ID"
+                    ],
+                    "referred_table": "Locality",
+                    "referred_columns": [
+                        "Location_ID"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "Store_Products": {
+            "columns": [
+                {
+                    "name": "Store_Products_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Store_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Product_ID",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "Stock_Quantity",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "default": null
+                },
+                {
+                    "name": "Created_Date",
+                    "type": "DATETIME",
+                    "nullable": false,
+                    "default": "(getdate())"
+                },
+                {
+                    "name": "Modified_Date",
+                    "type": "DATETIME",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "Store_Products_ID"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "Product_ID"
+                    ],
+                    "referred_table": "Product",
+                    "referred_columns": [
+                        "Product_ID"
+                    ]
+                },
+                {
+                    "column": [
+                        "Store_ID"
+                    ],
+                    "referred_table": "Store",
+                    "referred_columns": [
+                        "Store_ID"
+                    ]
+                }
+            ],
+            "indexes": []
+        }
+    },
+    "relationships": [
+        {
+            "from_table": "Product",
+            "from_column": [
+                "Product_Category_ID"
+            ],
+            "to_table": "Product_Category",
+            "to_column": [
+                "Product_Category_ID"
+            ]
+        },
+        {
+            "from_table": "Product_Features",
+            "from_column": [
+                "Product_ID"
+            ],
+            "to_table": "Product",
+            "to_column": [
+                "Product_ID"
+            ]
+        },
+        {
+            "from_table": "Product_Image",
+            "from_column": [
+                "Product_ID"
+            ],
+            "to_table": "Product",
+            "to_column": [
+                "Product_ID"
+            ]
+        },
+        {
+            "from_table": "Store",
+            "from_column": [
+                "Location_ID"
+            ],
+            "to_table": "Locality",
+            "to_column": [
+                "Location_ID"
+            ]
+        },
+        {
+            "from_table": "Store_Products",
+            "from_column": [
+                "Product_ID"
+            ],
+            "to_table": "Product",
+            "to_column": [
+                "Product_ID"
+            ]
+        },
+        {
+            "from_table": "Store_Products",
+            "from_column": [
+                "Store_ID"
+            ],
+            "to_table": "Store",
+            "to_column": [
+                "Store_ID"
+            ]
+        }
+    ]
+}

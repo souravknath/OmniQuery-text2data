@@ -1,0 +1,9 @@
+.env
+__pycache__/
+venv/
+*.pyc
+logs/
+scratch/
+node_modules/
+dist/
+.angular/

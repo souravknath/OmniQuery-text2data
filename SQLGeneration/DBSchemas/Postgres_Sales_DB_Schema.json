@@ -1,0 +1,348 @@
+{
+    "tables": {
+        "shipments": {
+            "columns": [
+                {
+                    "name": "shipment_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "nextval('shipments_shipment_id_seq'::regclass)"
+                },
+                {
+                    "name": "shipment_status",
+                    "type": "VARCHAR(100)",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "delivery_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "created_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": "now()"
+                },
+                {
+                    "name": "modified_date",
+                    "type": "TIMESTAMP",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "shipment_id"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "order_id"
+                    ],
+                    "referred_table": "Order",
+                    "referred_columns": [
+                        "order_id"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "invoices": {
+            "columns": [
+                {
+                    "name": "invoice_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "nextval('invoices_invoice_id_seq'::regclass)"
+                },
+                {
+                    "name": "payment_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "invoice_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "amount",
+                    "type": "NUMERIC(10, 2)",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "created_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": "now()"
+                },
+                {
+                    "name": "modified_date",
+                    "type": "TIMESTAMP",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "invoice_id"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "order_id"
+                    ],
+                    "referred_table": "Order",
+                    "referred_columns": [
+                        "order_id"
+                    ]
+                },
+                {
+                    "column": [
+                        "payment_id"
+                    ],
+                    "referred_table": "payments",
+                    "referred_columns": [
+                        "payment_id"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "payments": {
+            "columns": [
+                {
+                    "name": "payment_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "nextval('payments_payment_id_seq'::regclass)"
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "payment_method",
+                    "type": "VARCHAR(100)",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "payment_status",
+                    "type": "VARCHAR(100)",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "created_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": "now()"
+                },
+                {
+                    "name": "modified_date",
+                    "type": "TIMESTAMP",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "payment_id"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "order_id"
+                    ],
+                    "referred_table": "Order",
+                    "referred_columns": [
+                        "order_id"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "order_items": {
+            "columns": [
+                {
+                    "name": "order_items_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "nextval('order_items_order_items_id_seq'::regclass)"
+                },
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "product_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "quantity",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "price",
+                    "type": "NUMERIC(10, 2)",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "created_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": "now()"
+                },
+                {
+                    "name": "modified_date",
+                    "type": "TIMESTAMP",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "order_items_id"
+            ],
+            "foreign_keys": [
+                {
+                    "column": [
+                        "order_id"
+                    ],
+                    "referred_table": "Order",
+                    "referred_columns": [
+                        "order_id"
+                    ]
+                }
+            ],
+            "indexes": []
+        },
+        "Order": {
+            "columns": [
+                {
+                    "name": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": "nextval('\"Order_order_id_seq\"'::regclass)"
+                },
+                {
+                    "name": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "customer_address_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "order_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "order_amount",
+                    "type": "NUMERIC(10, 2)",
+                    "nullable": false,
+                    "default": null
+                },
+                {
+                    "name": "created_date",
+                    "type": "TIMESTAMP",
+                    "nullable": false,
+                    "default": "now()"
+                },
+                {
+                    "name": "modified_date",
+                    "type": "TIMESTAMP",
+                    "nullable": true,
+                    "default": null
+                }
+            ],
+            "primary_key": [
+                "order_id"
+            ],
+            "foreign_keys": [],
+            "indexes": []
+        }
+    },
+    "relationships": [
+        {
+            "from_table": "shipments",
+            "from_column": [
+                "order_id"
+            ],
+            "to_table": "Order",
+            "to_column": [
+                "order_id"
+            ]
+        },
+        {
+            "from_table": "invoices",
+            "from_column": [
+                "order_id"
+            ],
+            "to_table": "Order",
+            "to_column": [
+                "order_id"
+            ]
+        },
+        {
+            "from_table": "invoices",
+            "from_column": [
+                "payment_id"
+            ],
+            "to_table": "payments",
+            "to_column": [
+                "payment_id"
+            ]
+        },
+        {
+            "from_table": "payments",
+            "from_column": [
+                "order_id"
+            ],
+            "to_table": "Order",
+            "to_column": [
+                "order_id"
+            ]
+        },
+        {
+            "from_table": "order_items",
+            "from_column": [
+                "order_id"
+            ],
+            "to_table": "Order",
+            "to_column": [
+                "order_id"
+            ]
+        }
+    ]
+}

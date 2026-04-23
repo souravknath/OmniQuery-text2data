@@ -1,0 +1,31 @@
+{
+  "execution_order": [
+    "Mongo_USA_Customers",
+    "SQL_Product_ID",
+    "Postgres_Customer_Total"
+  ],
+  "databases": [
+    {
+      "name": "Mongo_USA_Customers",
+      "query": "{\"collection\": \"Customer_Address\", \"pipeline\": [{\"$match\": {\"Country\": \"USA\"}}, {\"$project\": {\"Customer_ID\": \"$Customer_ID\", \"_id\": 0}}]}"
+    },
+    {
+      "name": "SQL_Product_ID",
+      "query": "SELECT Product_ID FROM Product WHERE Product_Name = 'Webcam HD';"
+    },
+    {
+      "name": "Postgres_Customer_Total",
+      "query": "SELECT o.customer_id AS Customer_ID, SUM(o.order_amount) AS Total_Order_Amount FROM \"Order\" o JOIN order_items oi ON o.order_id = oi.order_id WHERE oi.product_id = {SQL_Inventory_DB.Product_ID} GROUP BY o.customer_id;"
+    }
+  ],
+  "join": {
+    "type": "inner",
+    "conditions": [
+      "Postgres_Customer_Total.Customer_ID = Mongo_USA_Customers.Customer_ID"
+    ]
+  },
+  "final_select": [
+    "Postgres_Customer_Total.Customer_ID",
+    "Postgres_Customer_Total.Total_Order_Amount"
+  ]
+}
